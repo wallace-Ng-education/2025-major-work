@@ -13,8 +13,9 @@ player_health = config.Level_preset["level1"]["player_health"]
 # use the defined sprite class for its functions
 class Enemy(pygame.sprite.Sprite):
     #  these init values will be obtained from the config file
-    def __init__(self, level, spawn_time):
+    def __init__(self, enemy_type, level, spawn_time):
         pygame.sprite.Sprite.__init__(self)
+        self.enemy_type = enemy_type
         # in format of "levelx"
         self.level = level
         self.spawn_time = spawn_time
@@ -83,10 +84,6 @@ class Enemy(pygame.sprite.Sprite):
 class Snake(Enemy):
     def __init__(self, enemy_type, level, spawn_time):
         Enemy.__init__(self, enemy_type, level, spawn_time)
-        self.enemy_type = "snake"
-        self.distance_per_frame = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["distance_per_second"] / fps
-        self.health = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["health"]
-        self.image = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["image"]
 
 
 ##########################################################################

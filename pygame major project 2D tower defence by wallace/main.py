@@ -23,13 +23,14 @@ player_currency_font = config.player_currency_font
 
 # getting data from classes
 Enemy = classes.enemy.Enemy
+Snake = classes.enemy.Snake
 linear = classes.tower.linear
 
 
 # with the format of "level1" for the level parameter
 def generate_enemies(level):
-    for snake in config.Level_preset[level]["enemy_data"]["snake"]["spawn_time"]:
-        a = Enemy(enemy_type, level, spawn_time)
+    for spawn_time in config.Level_preset[level]["enemy_data"]["snake"]["spawn_time"]:
+        a = Snake(level, spawn_time)
         ingame_level_data.Ingame_data["Enemy_prep_list"].add(a)
 
 

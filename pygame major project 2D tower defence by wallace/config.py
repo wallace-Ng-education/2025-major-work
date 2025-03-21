@@ -4,9 +4,9 @@ pygame.init()
 
 screen = pygame.display.set_mode((940, 540), pygame.RESIZABLE)
 # convert to make it load more quickly, alpha allows image transparency
-enemy_snakeIMG = pygame.transform.scale_by(pygame.image.load('assets/enemy_snakeIMG.png').convert_alpha(), 1.5)
-bullet_IMG = pygame.transform.scale_by(pygame.image.load('assets/attack_linearIMG.png').convert_alpha(), 0.7)
-tower_testIMG = pygame.image.load('assets/tower_test.png').convert()
+enemy_snakeIMG = pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/enemy_snakeIMG.png').convert_alpha(), 1.5)
+bullet_IMG = pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/attack_linearIMG.png').convert_alpha(), 0.7)
+tower_testIMG = pygame.image.load('pygame major project 2D tower defence by wallace/assets/tower_test.png').convert()
 
 # text font initialise
 enemy_health_font = pygame.font.SysFont("cambria", 25, False, False)
