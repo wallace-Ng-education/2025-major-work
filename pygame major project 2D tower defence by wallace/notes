@@ -1,0 +1,10 @@
+        for enemy in Enemy_list:
+            # check if collided
+            if self.linear_mask.overlap(enemy.enemy_mask, (enemy.rect.x - self.rect.x, enemy.rect.y - self.rect.y)):
+                enemy.health -= self.attack_damage_per_frame
+      #          print(enemy.health)    #   show health after hit
+                # if Enemy is dead
+                if enemy.health <= 0:
+                    Enemy_list.remove(enemy)
+                    Enemy_dead_list.add(enemy)
+        self.kill()
