@@ -11,7 +11,7 @@ import ingame_level_data
 pygame.init()
 
 # initialise icon and title
-pygame.display.set_icon(pygame.image.load('assets/game-icon.png'))
+pygame.display.set_icon(pygame.image.load('pygame major project 2D tower defence by wallace/assets/game-icon.png'))
 pygame.display.set_caption("Maths defence")
 
 # get data from config file
@@ -30,7 +30,8 @@ linear = classes.tower.linear
 # with the format of "level1" for the level parameter
 def generate_enemies(level):
     for spawn_time in config.Level_preset[level]["enemy_data"]["snake"]["spawn_time"]:
-        a = Snake(level, spawn_time)
+        print(spawn_time)
+        a = Snake("snake", level, spawn_time)
         ingame_level_data.Ingame_data["Enemy_prep_list"].add(a)
 
 

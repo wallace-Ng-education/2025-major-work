@@ -29,7 +29,7 @@ Level_preset = {
                 "spawn_time": (6, 1, 2, 3, 5, 7, 8, 9, 10)
             }
         },
-        "background_image": pygame.image.load('assets/level1_background.png'),
+        "background_image": pygame.image.load('pygame major project 2D tower defence by wallace/assets/level1_background.png'),
         "checkpoints": [(0, 0), (260, 180), (120, 300), (300, 400), (530, 230), (710, 350), (570, 470), (700, 570)],
         "player_health": 100,
         "player_currency": 100,
