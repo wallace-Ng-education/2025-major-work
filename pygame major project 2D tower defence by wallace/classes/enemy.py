@@ -15,22 +15,31 @@ class Enemy(pygame.sprite.Sprite):
     #  these init values will be obtained from the config file
     def __init__(self, enemy_type, level, spawn_time):
         pygame.sprite.Sprite.__init__(self)
+
+        # get defined data from input
+        ##################################################################################
         self.enemy_type = enemy_type
         # in format of "levelx"
         self.level = level
         self.spawn_time = spawn_time
 
+        # get the data according to the enemy type
+        ##################################################################################
         # distance/frame = (distance/second) / (frame/second)
         # so the speed of enemies will not change when changing the fps
         self.distance_per_frame = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["distance_per_second"] / fps
         self.health = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["health"]
         self.checkpoints = config.Level_preset[self.level]["checkpoints"]
+        self.image = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["image"]
 
+        # get common data for all enemies
+        ##################################################################################
+        self.bounty = 5
         # initially starts as first checkpoint, i.e. first checkpoint is spawn point
         self.location = Vector2(self.checkpoints[0])
         # initially goes towards the 2nd checkpoint in the list of checkpoints
         self.target_checkpoint = 1
-        self.image = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["image"]
+
 #        self.image = config.Level_data[self.level]["enemy_data"][self.enemy_type]["image"]
         self.movement = None
         self.target_location = None
@@ -46,10 +55,14 @@ class Enemy(pygame.sprite.Sprite):
         show_health = enemy_health_font.render(f"{round(health)}", True, (255, 255, 0))
         screen.blit(show_health, location)
 
+    def death(self):
+        ingame_level_data.Ingame_data["current_player_currency"] += self.bounty
+        self.kill()
+
+
     def move(self):
         # modification of global variable needed
         global player_health
-
         # check if there is still checkpoints to go
         if self.target_checkpoint < len(self.checkpoints):
             # O is origin, T is the target checkpoint. This is the vector OT
@@ -77,14 +90,14 @@ class Enemy(pygame.sprite.Sprite):
         # enemy has finished path
         else:
             ingame_level_data.Ingame_data["current_player_health"] -= self.health
-            self.kill()
+            self.death()
 #            print('-' , self.health)  #  show health when finish path
 
 
 class Snake(Enemy):
     def __init__(self, enemy_type, level, spawn_time):
-    #    self.enemy_type = "snake"
         Enemy.__init__(self, enemy_type, level, spawn_time)
+        self.bounty = 10
 
 
 ##########################################################################

@@ -29,10 +29,12 @@ linear = classes.tower.linear
 
 # with the format of "level1" for the level parameter
 def generate_enemies(level):
-    for spawn_time in config.Level_preset[level]["enemy_data"]["snake"]["spawn_time"]:
-        print(spawn_time)
-        a = Snake("snake", level, spawn_time)
-        ingame_level_data.Ingame_data["Enemy_prep_list"].add(a)
+    for enemy_type in config.Level_preset[level]["enemy_data"]:
+        if enemy_type == "snake":
+            for spawn_time in config.Level_preset[level]["enemy_data"]["snake"]["spawn_time"]:
+                a = Snake("snake", level, spawn_time)
+                ingame_level_data.Ingame_data["Enemy_prep_list"].add(a)
+
 
 
 def display_player_data():

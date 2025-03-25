@@ -59,6 +59,7 @@ class linear_attack(Attacks):
             if enemy.rect.clipline((self.line_start, self.line_end)):
                 enemy.health -= self.attack_damage_per_frame
                 if enemy.health <= 0:
+                    ingame_level_data.Ingame_data["current_player_currency"] += enemy.bounty
                     Enemy_list.remove(enemy)
                     Enemy_dead_list.add(enemy)
 
