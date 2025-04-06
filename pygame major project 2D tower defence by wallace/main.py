@@ -25,6 +25,7 @@ player_currency_font = config.player_currency_font
 Enemy = classes.enemy.Enemy
 Snake = classes.enemy.Snake
 linear = classes.tower.linear
+Ant_g = classes.enemy.Ant_g
 
 
 # with the format of "level1" for the level parameter
@@ -32,10 +33,17 @@ def generate_enemies(level):
     for enemy_type in config.Level_preset[level]["enemy_data"]:
         if enemy_type == "snake":
             for spawn_time in config.Level_preset[level]["enemy_data"]["snake"]["spawn_time"]:
-                a = Snake("snake", level, spawn_time)
-                ingame_level_data.Ingame_data["Enemy_prep_list"].add(a)
+                a = Snake(level, spawn_time)
+                ingame_level_data.Ingame_data["Enemy_prep_list"].append(a)
+        if enemy_type == "ant_g":
+            for spawn_time in config.Level_preset[level]["enemy_data"]["ant_g"]["spawn_time"]:
+                a = Ant_g(level, spawn_time)
+                ingame_level_data.Ingame_data["Enemy_prep_list"].append(a)
+    ingame_level_data.Ingame_data["Enemy_prep_list"].sort(key=find_spawn_time)
 
-
+# to be used in the function generate_enemies
+def find_spawn_time(e):
+    return(e.spawn_time)
 
 def display_player_data():
     # health
@@ -52,6 +60,11 @@ def place_tower(tower_type, level, location: Vector2):
     if tower_type == "linear":
         ingame_level_data.Ingame_data["Tower_list"].add(linear(tower_type, level, location))
 
+def spawn_enemies():
+    current_time = pygame.time.get_ticks() / 1000 - time_level_init
+    while 0 < len(Enemy_prep_list) and Enemy_prep_list[0].spawn_time <= current_time:
+        Enemy_list.add(Enemy_prep_list[0])
+        Enemy_prep_list.pop(0)
 
 # Game loop
 running = True
@@ -104,7 +117,7 @@ while running:
             # start loop for level 1
             while level1_running:
                 # test for the actual time taken per frame
-                # start_time = datetime.now()
+                start_time = datetime.now()
 
                 # get list from the file once and for all for this aim
                 Enemy_list = ingame_level_data.Ingame_data["Enemy_list"]
@@ -127,8 +140,10 @@ while running:
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         mouse = pygame.mouse.get_pos()
                         # print(mouse)
-                        place_tower("linear", "level1", Vector2(pygame.mouse.get_pos()))
-                        tower_placed += 1
+                        if ingame_level_data.Ingame_data["current_player_currency"] >= 50:
+                            place_tower("linear", "level1", Vector2(pygame.mouse.get_pos()))
+                            tower_placed += 1
+                            ingame_level_data.Ingame_data["current_player_currency"] -= 50
 
                         # home & reset button
                         if 890 <= mouse[0] <= 940 and 0 <= mouse[1] <= 50:
@@ -155,11 +170,14 @@ while running:
                     enemy.move()
 
                 # move enemies from prep list to list at certain time
-                time = pygame.time.get_ticks()/1000 - time_level_init
-                for enemy in Enemy_prep_list:
-                    if time >= enemy.spawn_time:
-                        Enemy_prep_list.remove(enemy)
-                        Enemy_list.add(enemy)
+                spawn_enemies()
+                        # OLD:
+                        #        time = pygame.time.get_ticks()/1000 - time_level_init
+                        #        for enemy in Enemy_prep_list:
+                        #            if time >= enemy.spawn_time:
+                        #                Enemy_prep_list.remove(enemy)
+                        #                Enemy_list.add(enemy)
+
 
                 # check if the player have any health left --> should add a death message / screen / score
                 if ingame_level_data.Ingame_data["current_player_health"] <= 0:
@@ -171,7 +189,7 @@ while running:
                 # put the changed things on screen
                 pygame.display.update()
 
-                # print(datetime.now() - start_time, "tower placed:", tower_placed)
+                print(datetime.now() - start_time, "tower placed:", tower_placed)
                 clock.tick(fps)
 
 pygame.quit()

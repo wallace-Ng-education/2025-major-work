@@ -2,6 +2,7 @@ import pygame
 import config
 from pygame.math import Vector2
 import ingame_level_data
+import random
 
 # get global data from config
 screen = config.screen
@@ -31,10 +32,10 @@ class Enemy(pygame.sprite.Sprite):
         self.health = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["health"]
         self.checkpoints = config.Level_preset[self.level]["checkpoints"]
         self.image = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["image"]
+        self.bounty = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["bounty"]
 
         # get common data for all enemies
         ##################################################################################
-        self.bounty = 5
         # initially starts as first checkpoint, i.e. first checkpoint is spawn point
         self.location = Vector2(self.checkpoints[0])
         # initially goes towards the 2nd checkpoint in the list of checkpoints
@@ -54,6 +55,7 @@ class Enemy(pygame.sprite.Sprite):
     def show_health(self, health: int, location: Vector2):
         show_health = enemy_health_font.render(f"{round(health)}", True, (255, 255, 0))
         screen.blit(show_health, location)
+        pygame.draw.circle(screen, (255, 0, 255), self.location, 2)
 
     def death(self):
         ingame_level_data.Ingame_data["current_player_currency"] += self.bounty
@@ -95,9 +97,40 @@ class Enemy(pygame.sprite.Sprite):
 
 
 class Snake(Enemy):
-    def __init__(self, enemy_type, level, spawn_time):
-        Enemy.__init__(self, enemy_type, level, spawn_time)
-        self.bounty = 10
+    # equal sign
+    def __init__(self, level, spawn_time):
+        Enemy.__init__(self, "snake", level, spawn_time)
+
+
+class Ant_g(Enemy):
+    # greater than
+    def __init__(self, level, spawn_time):
+        Enemy.__init__(self, "ant_g", level, spawn_time)
+        self.randint: int = random.randint(-100,100)
+
+    # show a health and the number that it needs to be greater than
+    def show_health(self, health: int, location: Vector2):
+        health_message: str = f"{self.randint} < {round(health + self.randint)}"
+        show_health = enemy_health_font.render(health_message, True, (255, 255, 0))
+        message_width_half = show_health.get_rect()[2] / 2
+        message_height_half = show_health.get_rect()[3] / 2
+        screen.blit(show_health, (location[0] - message_width_half, location[1] - message_height_half))
+
+
+class Ant_s(Enemy):
+    # smaller than
+    def __init__(self, level, spawn_time):
+        Enemy.__init__(self, "ant_s", level, spawn_time)
+        self.randint: int = random.randint(-100,100)
+        self.appearent_health: int = self.randint - self.health 
+
+    # show a health and the number that it needs to be greater than
+    def show_health(self, health: int, location: Vector2):
+        health_message: str = f"{self.randint} > {round(health + self.randint)}"
+        show_health = enemy_health_font.render(health_message, True, (255, 255, 0))
+        message_width_half = show_health.get_rect()[2] / 2
+        message_height_half = show_health.get_rect()[3] / 2
+        screen.blit(show_health, (location[0] - message_width_half, location[1] - message_height_half))
 
 
 ##########################################################################

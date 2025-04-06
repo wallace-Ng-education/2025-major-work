@@ -26,7 +26,16 @@ Level_preset = {
                 # distance in pixels
                 "distance_per_second": 100,
                 "image": enemy_snakeIMG,
-                "spawn_time": (6, 1, 2, 3, 5, 7, 8, 9, 10)
+                "spawn_time": (),
+                "bounty": 10
+            },
+            "ant_g": {
+                "health": 100,
+                # distance in pixels
+                "distance_per_second": 100,
+                "image": enemy_snakeIMG,
+                "spawn_time": (3.4, 4.5, 6, 1, 2, 3, 5, 7, 8, 9, 10),
+                "bounty": 5
             }
         },
         "background_image": pygame.image.load('pygame major project 2D tower defence by wallace/assets/level1_background.png'),
