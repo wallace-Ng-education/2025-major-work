@@ -55,7 +55,7 @@ class Enemy(pygame.sprite.Sprite):
     def show_health(self, health: int, location: Vector2):
         show_health = enemy_health_font.render(f"{round(health)}", True, (255, 255, 0))
         screen.blit(show_health, location)
-        pygame.draw.circle(screen, (255, 0, 255), self.location, 2)
+
 
     def death(self):
         ingame_level_data.Ingame_data["current_player_currency"] += self.bounty
@@ -108,13 +108,22 @@ class Ant_g(Enemy):
         Enemy.__init__(self, "ant_g", level, spawn_time)
         self.randint: int = random.randint(-100,100)
 
+        # get the width needed to center this message, allow functions in this class to accesss the width 
+        health_message_align: str = f"{self.randint} "
+        health_message_align = enemy_health_font.render(health_message_align, True, (255, 255, 0))
+        # +9 in consideration of the length of the "<" symbol
+        self.message_width_half: float = health_message_align.get_rect()[2] + 9
+
     # show a health and the number that it needs to be greater than
     def show_health(self, health: int, location: Vector2):
+        # get the strings
         health_message: str = f"{self.randint} < {round(health + self.randint)}"
-        show_health = enemy_health_font.render(health_message, True, (255, 255, 0))
-        message_width_half = show_health.get_rect()[2] / 2
-        message_height_half = show_health.get_rect()[3] / 2
-        screen.blit(show_health, (location[0] - message_width_half, location[1] - message_height_half))
+        # turn the strings into pygame rectangles
+        health_message = enemy_health_font.render(health_message, True, (255, 255, 0))
+
+        # center the ">" in health_message 
+        message_height_half = health_message.get_rect()[3] / 2
+        screen.blit(health_message, (location[0] - self.message_width_half, location[1] - message_height_half))
 
 
 class Ant_s(Enemy):
@@ -124,13 +133,21 @@ class Ant_s(Enemy):
         self.randint: int = random.randint(-100,100)
         self.appearent_health: int = self.randint - self.health 
 
+        # get the width needed to center this message, allow functions in this class to accesss the width 
+        health_message_align: str = f"{self.randint} "
+        health_message_align = enemy_health_font.render(health_message_align, True, (255, 255, 0))
+        # +9 in consideration of the length of the ">" symbol
+        self.message_width_half: float = health_message_align.get_rect()[2] + 9
+
     # show a health and the number that it needs to be greater than
     def show_health(self, health: int, location: Vector2):
+        # get the strings
         health_message: str = f"{self.randint} > {round(health + self.randint)}"
-        show_health = enemy_health_font.render(health_message, True, (255, 255, 0))
-        message_width_half = show_health.get_rect()[2] / 2
-        message_height_half = show_health.get_rect()[3] / 2
-        screen.blit(show_health, (location[0] - message_width_half, location[1] - message_height_half))
+        # turn the strings into pygame rectangles
+        health_message = enemy_health_font.render(health_message, True, (255, 255, 0))
 
+        # center the ">" in health_message 
+        message_height_half = health_message.get_rect()[3] / 2
+        screen.blit(health_message, (location[0] - self.message_width_half, location[1] - message_height_half))
 
 ##########################################################################

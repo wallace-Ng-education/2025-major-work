@@ -7,6 +7,7 @@ import config
 screen = config.screen
 bullet_IMG = config.bullet_IMG
 fps = config.fps
+linear_dps = config.Tower_preset["linear"]["dps"]
 
 
 class Attacks(pygame.sprite.Sprite):
@@ -45,7 +46,7 @@ class linear_attack(Attacks):
         # creating a mask for pixel perfect collision check
         self.linear_mask = pygame.mask.from_surface(self.image)
 
-        self.attack_damage_per_second = 30
+        self.attack_damage_per_second = linear_dps
         # to make the damage output non-affected by framerate adjustments
         self.attack_damage_per_frame = self.attack_damage_per_second / fps
 

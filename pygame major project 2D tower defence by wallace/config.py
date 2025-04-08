@@ -26,7 +26,7 @@ Level_preset = {
                 # distance in pixels
                 "distance_per_second": 100,
                 "image": enemy_snakeIMG,
-                "spawn_time": (),
+                "spawn_time": (0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8),
                 "bounty": 10
             },
             "ant_g": {
@@ -34,7 +34,7 @@ Level_preset = {
                 # distance in pixels
                 "distance_per_second": 100,
                 "image": enemy_snakeIMG,
-                "spawn_time": (3.4, 4.5, 6, 1, 2, 3, 5, 7, 8, 9, 10),
+                "spawn_time": {1, 2,3,4,5,6,7,8,9,20}, # (tuple([x/100 for x in range(1000)])),
                 "bounty": 5
             }
         },
@@ -46,4 +46,10 @@ Level_preset = {
 
     # 2
     "level2": {}
+}
+
+Tower_preset = {
+    "linear": {
+        "dps": 10
+    }
 }

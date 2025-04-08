@@ -151,7 +151,7 @@ while running:
                             level1_running = False
                             ingame_level_data.Ingame_data["Enemy_dead_list"].empty()
                             ingame_level_data.Ingame_data["Enemy_list"].empty()
-                            ingame_level_data.Ingame_data["Enemy_prep_list"].empty()
+                            ingame_level_data.Ingame_data["Enemy_prep_list"] = []
                             ingame_level_data.Ingame_data["Tower_list"].empty()
 
                 Enemy_list.draw(screen)
@@ -189,7 +189,7 @@ while running:
                 # put the changed things on screen
                 pygame.display.update()
 
-                print(datetime.now() - start_time, "tower placed:", tower_placed)
+                # print(datetime.now() - start_time, "tower placed:", tower_placed)
                 clock.tick(fps)
 
 pygame.quit()
