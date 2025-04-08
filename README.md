@@ -1,2 +1,2 @@
 # 2025-major-work
-wallace's lovely major work :-)
+versions before I switched to github
