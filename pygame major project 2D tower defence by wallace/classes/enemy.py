@@ -121,7 +121,7 @@ class Ant_g(Enemy):
         # turn the strings into pygame rectangles
         health_message = enemy_health_font.render(health_message, True, (255, 255, 0))
 
-        # center the ">" in health_message 
+        # center the "<" in health_message 
         message_height_half = health_message.get_rect()[3] / 2
         screen.blit(health_message, (location[0] - self.message_width_half, location[1] - message_height_half))
 
@@ -130,7 +130,7 @@ class Ant_s(Enemy):
     # smaller than
     def __init__(self, level, spawn_time):
         Enemy.__init__(self, "ant_s", level, spawn_time)
-        self.randint: int = random.randint(-100,100)
+        self.randint: int = random.randint(200,100)
         self.appearent_health: int = self.randint - self.health 
 
         # get the width needed to center this message, allow functions in this class to accesss the width 
@@ -142,7 +142,7 @@ class Ant_s(Enemy):
     # show a health and the number that it needs to be greater than
     def show_health(self, health: int, location: Vector2):
         # get the strings
-        health_message: str = f"{self.randint} > {round(health + self.randint)}"
+        health_message: str = f"{self.randint} > {round(-health + self.randint)}"
         # turn the strings into pygame rectangles
         health_message = enemy_health_font.render(health_message, True, (255, 255, 0))
 
