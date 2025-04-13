@@ -3,11 +3,12 @@ import config
 from pygame.math import Vector2
 import ingame_level_data
 import random
+import copy
 
 # get global data from config
-screen = config.screen
-fps = config.fps
-enemy_health_font = config.enemy_health_font
+screen = config.Initialise["screen"]
+fps = config.Initialise["fps"]
+enemy_health_font = config.Initialise["enemy_health_font"]
 player_health = config.Level_preset["level1"]["player_health"]
 
 
@@ -30,8 +31,9 @@ class Enemy(pygame.sprite.Sprite):
         # so the speed of enemies will not change when changing the fps
         self.distance_per_frame = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["distance_per_second"] / fps
         self.health = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["health"]
-        self.checkpoints = config.Level_preset[self.level]["checkpoints"]
-        self.image = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["image"]
+        self.checkpoints = list(config.Level_preset[self.level]["checkpoints"])
+        self.image = copy.deepcopy(config.Level_preset[self.level]["enemy_data"][self.enemy_type]["image"])
+        self.original_image = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["image"]
         self.bounty = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["bounty"]
 
         # get common data for all enemies
@@ -50,6 +52,8 @@ class Enemy(pygame.sprite.Sprite):
 
         self.enemy_mask = pygame.mask.from_surface(self.image)
         self.mask_image = self.enemy_mask.to_surface()
+
+        self.old_resize_factor = 1
 
     # show health of enemy, logically belongs to the enemy class
     def show_health(self, health: int, location: Vector2):
@@ -95,6 +99,20 @@ class Enemy(pygame.sprite.Sprite):
             self.death()
 #            print('-' , self.health)  #  show health when finish path
 
+    def resize(self, resize_factor: float):
+        self.image = pygame.transform.scale_by(self.original_image, resize_factor)
+
+        self.checkpoints = []
+        for i in config.Level_preset[self.level]["checkpoints"]:
+            self.checkpoints.append((i[0] * resize_factor, i[1] * resize_factor))
+
+        self.distance_per_frame = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["distance_per_second"] / fps * resize_factor
+
+        self.location = Vector2(self.location[0] / self.old_resize_factor * resize_factor , self.location[1] / self.old_resize_factor * resize_factor)
+        self.rect = self.image.get_rect()
+        self.rect.center = self.location
+
+        self.old_resize_factor = resize_factor
 
 class Snake(Enemy):
     # equal sign

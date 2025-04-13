@@ -4,27 +4,34 @@ import ingame_level_data
 import config
 
 # get data from config file
-screen = config.screen
-bullet_IMG = config.bullet_IMG
-fps = config.fps
+screen = config.Initialise["screen"]
+bullet_IMG = config.Initialise["bullet_IMG"]
+fps = config.Initialise["fps"]
 linear_dps = config.Tower_preset["linear"]["dps"]
 
 
 class Attacks(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, resize_factor: float):
         pygame.sprite.Sprite.__init__(self)
         self.image = None
         self.rect = None
         self.hit_list = None
         self.hit_box = None
+        self.resize_factor = resize_factor
 
     def tick(self):
         pass
 
+    def resize(self, resize_factor: float):
+        self.image = pygame.transform.scale_by(self.image, resize_factor)
+        self.rect = self.image.get_rect()
+        self.rect.center = self.location
+        self.resize_factor = resize_factor
+
 
 class linear_attack(Attacks):
-    def __init__(self, direction: Vector2, location: Vector2):
-        Attacks.__init__(self)
+    def __init__(self, resize_factor: float, direction: Vector2, location: Vector2):
+        Attacks.__init__(self, resize_factor)
 
         self.location = location
         self.direction = direction
@@ -35,7 +42,7 @@ class linear_attack(Attacks):
         # clockwise angle from East axis
         self.angle = self.direction.angle_to(self.East)
 
-        self.image = pygame.transform.rotate(bullet_IMG, self.angle)
+        self.image = pygame.transform.scale_by(pygame.transform.rotate(bullet_IMG, self.angle), self.resize_factor)
         self.rect = self.image.get_rect()
         self.rect.center = self.location
 

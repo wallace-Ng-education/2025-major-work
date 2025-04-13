@@ -11,14 +11,14 @@ import ingame_level_data
 pygame.init()
 
 # initialise icon and title
-pygame.display.set_icon(pygame.image.load('pygame major project 2D tower defence by wallace/assets/game-icon.png'))
-pygame.display.set_caption("Maths defence")
+pygame.display.set_icon(pygame.image.load(config.Initialise["icon"]))
+pygame.display.set_caption(config.Initialise["title"])
 
 # get data from config file
-screen = config.screen
-fps = config.fps
-player_health_font = config.player_health_font
-player_currency_font = config.player_currency_font
+screen = config.Initialise["screen"]
+fps = config.Initialise["fps"]
+player_health_font = config.Initialise["player_health_font"]
+player_currency_font = config.Initialise["player_currency_font"]
 
 
 # getting data from classes
@@ -28,8 +28,8 @@ linear = classes.tower.linear
 Ant_g = classes.enemy.Ant_g
 
 
+def generate_enemies(level : str):
 # with the format of "level1" for the level parameter
-def generate_enemies(level):
     for enemy_type in config.Level_preset[level]["enemy_data"]:
         if enemy_type == "snake":
             for spawn_time in config.Level_preset[level]["enemy_data"]["snake"]["spawn_time"]:
@@ -49,41 +49,96 @@ def display_player_data():
     # health
     show_health = player_health_font.render(f"{round(ingame_level_data.Ingame_data["current_player_health"])}", True, (255, 255, 255))
     # draw it at left bottom corner with a 10px padding
-    screen.blit(show_health, (760, 5))
+    original_show_health_cords = (760, 5)
+    screen.blit(show_health, [i * ingame_level_data.Ingame_data["resize_factor"] for i in original_show_health_cords])
 
     # currency
     show_currency = player_currency_font.render(f"{(ingame_level_data.Ingame_data["current_player_currency"])}", True, (255, 255, 0))
-    screen.blit(show_currency, (760, 25))
 
+    original_show_currency_cords = (760, 25)
+    screen.blit(show_currency, [i * ingame_level_data.Ingame_data["resize_factor"] for i in original_show_currency_cords])
 
 def place_tower(tower_type, level, location: Vector2):
+    original_location = revert_resizing_cords(location)
+
     if tower_type == "linear":
-        ingame_level_data.Ingame_data["Tower_list"].add(linear(tower_type, level, location))
+        tower = linear(tower_type, level, original_location)
+        ingame_level_data.Ingame_data["Tower_list"].add(tower)
+
+    tower.resize(ingame_level_data.Ingame_data["resize_factor"])
 
 def spawn_enemies():
     current_time = pygame.time.get_ticks() / 1000 - time_level_init
     while 0 < len(Enemy_prep_list) and Enemy_prep_list[0].spawn_time <= current_time:
+        Enemy_prep_list[0].resize(ingame_level_data.Ingame_data["resize_factor"])
         Enemy_list.add(Enemy_prep_list[0])
         Enemy_prep_list.pop(0)
+
+# give a factor for everything to be resized to
+def resize():
+    old_width, old_height = config.Initialise["screen_size"]
+    new_width, new_height = pygame.display.get_surface().get_size()
+    
+    # compare whether old or new
+    width_factor = new_width / old_width
+    height_factor = new_height / old_height
+
+    if width_factor <= height_factor:
+        ingame_level_data.Ingame_data["resize_factor"] = width_factor
+    else:
+        ingame_level_data.Ingame_data["resize_factor"] = height_factor
+
+def import_rect_settings(level : str):
+# with the format of "level1" for the level parameter
+
+    # import the new rectangle settings into ingame data by first clearing the old one
+    ingame_level_data.Ingame_data["rect"] = {}
+    for i in config.Level_preset[level]["rect"]:
+        rect = { # create a copy of the dictionary
+            "cords": list(config.Level_preset[level]["rect"][str(i)]["cords"]),  
+            "color": config.Level_preset[level]["rect"][str(i)]["color"]  
+        }
+        ingame_level_data.Ingame_data["rect"].update({i : rect})
+
+        for j in range(0,4): # make change due to the resizing
+                    ingame_level_data.Ingame_data["rect"][str(i)]["cords"][j] *= ingame_level_data.Ingame_data["resize_factor"]
+
+def revert_resizing_cords(cords):
+    original_cords = Vector2(cords[0] / ingame_level_data.Ingame_data["resize_factor"], cords[1] / ingame_level_data.Ingame_data["resize_factor"])
+    return original_cords
 
 # Game loop
 running = True
 
+# where level 0 is the homepage and level 1 will be battle places.
+level_selected = 0
+
+# not resized yet
+resize_factor = 1
+
 # initialise time right before the loop begins to avoid the delay from running other codes
 clock = pygame.time.Clock()
 
-# where level 0 is the homepage and level 1 will be battle places.
-level_selected = 0
 
 while running:
     match level_selected:
         case 0:
+            
             home_running = True
+
+            # set the buttons
+            import_rect_settings("home")
+            tutorial_button_rect = ingame_level_data.Ingame_data["rect"]["tutorial"]["cords"]
+            level1_button_rect = ingame_level_data.Ingame_data["rect"]["level1"]["cords"]
+
             while home_running:
                 screen.fill((232, 185, 77))
-    
-                pygame.draw.rect(screen, (0, 200, 0), [100, 100, 50, 50])
-    
+
+                # display buttons, temporary
+                for i in ingame_level_data.Ingame_data["rect"]:
+                    level_button_cords = ingame_level_data.Ingame_data["rect"][str(i)]["cords"]
+                    pygame.draw.rect(screen, ingame_level_data.Ingame_data["rect"][str(i)]["color"], [i for i in level_button_cords])
+                
                 # function to exit the game while player pressed X on game window
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -91,14 +146,23 @@ while running:
                         running = False
                         home_running = False
 
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        # testing mouse
+                    # Buttons
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
                         mouse = pygame.mouse.get_pos()
-                        if 100 <= mouse[0] <= 150 and 100 <= mouse[1] <= 150:
+                        if tutorial_button_rect[0] <= mouse[0] <= (tutorial_button_rect[0] + tutorial_button_rect[2]) and tutorial_button_rect[1] <= mouse[1] <= (tutorial_button_rect[1] + tutorial_button_rect[3]):
+                            # quit the loop of this level and start that of level 1
+                            print("hi")
+                        if level1_button_rect[0] <= mouse[0] <= (level1_button_rect[0] + level1_button_rect[2]) and level1_button_rect[1] <= mouse[1] <= (level1_button_rect[1] + level1_button_rect[3]):
                             # quit the loop of this level and start that of level 1
                             level_selected = 1
                             home_running = False
-    
+
+                    elif event.type == pygame.VIDEORESIZE:
+                        resize()
+                        import_rect_settings("home")
+                        tutorial_button_rect = ingame_level_data.Ingame_data["rect"]["tutorial"]["cords"]
+                        level1_button_rect = ingame_level_data.Ingame_data["rect"]["level1"]["cords"]
+
                 pygame.display.update()
                 clock.tick(fps)
 
@@ -110,6 +174,12 @@ while running:
             generate_enemies("level1")
             background = config.Level_preset["level1"]["background_image"]
             tower_placed = 0
+
+            # import retangles
+            import_rect_settings("level1")
+            home_button_rect = ingame_level_data.Ingame_data["rect"]["home"]["cords"]
+            pause_button_rect = ingame_level_data.Ingame_data["rect"]["pause"]["cords"]
+            background = pygame.transform.scale_by(config.Level_preset["level1"]["background_image"], ingame_level_data.Ingame_data["resize_factor"])
 
             # The enemies spawn relative to when the
             time_level_init = pygame.time.get_ticks()/1000
@@ -126,10 +196,14 @@ while running:
                 Attack_list = ingame_level_data.Ingame_data["Attack_list"]
 
                 # insert background image
+                screen.fill((30, 10, 0))
                 screen.blit(background, (0, 0))
 
-                # display player health
-                display_player_data()
+                # display buttons, temporary
+                for i in ingame_level_data.Ingame_data["rect"]:
+                    button_cords = ingame_level_data.Ingame_data["rect"][str(i)]["cords"]
+                    pygame.draw.rect(screen, ingame_level_data.Ingame_data["rect"][str(i)]["color"], [i for i in button_cords])
+                
 
                 # function to exit the game while player pressed X on game window
                 for event in pygame.event.get():
@@ -146,13 +220,30 @@ while running:
                             ingame_level_data.Ingame_data["current_player_currency"] -= 50
 
                         # home & reset button
-                        if 890 <= mouse[0] <= 940 and 0 <= mouse[1] <= 50:
+                        if home_button_rect[0] <= mouse[0] <= (home_button_rect[0] + home_button_rect[2]) and home_button_rect[1] <= mouse[1] <= (home_button_rect[1] + home_button_rect[3]):
                             level_selected = 0
                             level1_running = False
                             ingame_level_data.Ingame_data["Enemy_dead_list"].empty()
                             ingame_level_data.Ingame_data["Enemy_list"].empty()
                             ingame_level_data.Ingame_data["Enemy_prep_list"] = []
                             ingame_level_data.Ingame_data["Tower_list"].empty()
+
+                    elif event.type == pygame.VIDEORESIZE:
+                        resize()
+                        import_rect_settings("level1")
+                        
+                        home_button_rect = ingame_level_data.Ingame_data["rect"]["home"]["cords"]
+                        pause_button_rect = ingame_level_data.Ingame_data["rect"]["pause"]["cords"]
+
+                        for i in Enemy_list:
+                            i.resize(ingame_level_data.Ingame_data["resize_factor"])
+                        for j in Tower_list:
+                            j.resize(ingame_level_data.Ingame_data["resize_factor"])
+                        for k in Attack_list:
+                            k.resize(ingame_level_data.Ingame_data["resize_factor"])
+
+                        background = pygame.transform.scale_by(config.Level_preset["level1"]["background_image"], ingame_level_data.Ingame_data["resize_factor"])
+
 
                 Enemy_list.draw(screen)
                 Tower_list.draw(screen)
@@ -184,8 +275,9 @@ while running:
                     running = False
                     level1_running = False
 
-                pygame.draw.rect(screen, (0, 200, 0), [890, 0, 50, 50])
-
+                # display player health
+                display_player_data()
+                
                 # put the changed things on screen
                 pygame.display.update()
 
