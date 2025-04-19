@@ -36,7 +36,6 @@ class Tower(pygame.sprite.Sprite):
         self.rect.center = self.location
 
     def aim(self):
-        pygame.draw.circle(screen, (255, 255, 255), self.location, self.range, width=2)
         # get list from the file once and for all for this aim
         Enemy_list = ingame_level_data.Ingame_data["Enemy_list"]
 
@@ -59,11 +58,11 @@ class Tower(pygame.sprite.Sprite):
                 if self.targeted_enemy in Enemy_list and (self.location - target_location).length() <= self.range:
                     # enemy is still aimable
                     # draw an aiming lense like shape
-                    pygame.draw.circle(screen, (255, 255, 255), target_location, 10, width=4)
-                    pygame.draw.line(screen, (255, 255, 255), (target_location.x - 15, target_location.y), (target_location.x - 10, target_location.y), 4)
-                    pygame.draw.line(screen, (255, 255, 255), (target_location.x + 15, target_location.y), (target_location.x + 10, target_location.y), 4)
-                    pygame.draw.line(screen, (255, 255, 255), (target_location.x, target_location.y + 15), (target_location.x, target_location.y + 10), 4)
-                    pygame.draw.line(screen, (255, 255, 255), (target_location.x, target_location.y - 15), (target_location.x, target_location.y - 10), 4)
+       #             pygame.draw.circle(screen, (255, 255, 255), target_location, 10, width=4)
+        #            pygame.draw.line(screen, (255, 255, 255), (target_location.x - 15, target_location.y), (target_location.x - 10, target_location.y), 4)
+         #           pygame.draw.line(screen, (255, 255, 255), (target_location.x + 15, target_location.y), (target_location.x + 10, target_location.y), 4)
+          #          pygame.draw.line(screen, (255, 255, 255), (target_location.x, target_location.y + 15), (target_location.x, target_location.y + 10), 4)
+           #         pygame.draw.line(screen, (255, 255, 255), (target_location.x, target_location.y - 15), (target_location.x, target_location.y - 10), 4)
                     self.facing_vector = self.location - target_location
                     self.shoot()
 

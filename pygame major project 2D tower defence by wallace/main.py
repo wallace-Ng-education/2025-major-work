@@ -17,8 +17,12 @@ pygame.display.set_caption(config.Initialise["title"])
 # get data from config file
 screen = config.Initialise["screen"]
 fps = config.Initialise["fps"]
-player_health_font = config.Initialise["player_health_font"]
-player_currency_font = config.Initialise["player_currency_font"]
+
+# consider importing settings to a list that fit into pygame.font.SysFont() -> usually [text family: str, size: int, blod: bool, i]
+player_health_font = pygame.font.SysFont(config.Initialise["player_health_font"][0], config.Initialise["player_health_font"][1], config.Initialise["player_health_font"][2], config.Initialise["player_health_font"][3])
+player_currency_font = player_currency_font = pygame.font.SysFont(config.Initialise["player_currency_font"][0], config.Initialise["player_currency_font"][1], config.Initialise["player_currency_font"][2], config.Initialise["player_currency_font"][3])
+enemy_health_font = pygame.font.SysFont(config.Initialise["enemy_health_font"][0], config.Initialise["enemy_health_font"][1], config.Initialise["enemy_health_font"][2], config.Initialise["enemy_health_font"][3])
+
 
 
 # getting data from classes
@@ -75,7 +79,7 @@ def spawn_enemies():
         Enemy_prep_list.pop(0)
 
 # give a factor for everything to be resized to
-def resize():
+def resize_factor_get():
     old_width, old_height = config.Initialise["screen_size"]
     new_width, new_height = pygame.display.get_surface().get_size()
     
@@ -112,9 +116,6 @@ running = True
 
 # where level 0 is the homepage and level 1 will be battle places.
 level_selected = 0
-
-# not resized yet
-resize_factor = 1
 
 # initialise time right before the loop begins to avoid the delay from running other codes
 clock = pygame.time.Clock()
@@ -158,7 +159,7 @@ while running:
                             home_running = False
 
                     elif event.type == pygame.VIDEORESIZE:
-                        resize()
+                        resize_factor_get()
                         import_rect_settings("home")
                         tutorial_button_rect = ingame_level_data.Ingame_data["rect"]["tutorial"]["cords"]
                         level1_button_rect = ingame_level_data.Ingame_data["rect"]["level1"]["cords"]
@@ -229,11 +230,14 @@ while running:
                             ingame_level_data.Ingame_data["Tower_list"].empty()
 
                     elif event.type == pygame.VIDEORESIZE:
-                        resize()
+                        resize_factor_get()
                         import_rect_settings("level1")
                         
                         home_button_rect = ingame_level_data.Ingame_data["rect"]["home"]["cords"]
                         pause_button_rect = ingame_level_data.Ingame_data["rect"]["pause"]["cords"]
+                        
+                        player_health_font = pygame.font.SysFont(config.Initialise["player_health_font"][0], round(config.Initialise["player_health_font"][1] * ingame_level_data.Ingame_data["resize_factor"]), config.Initialise["player_health_font"][2], config.Initialise["player_health_font"][3])
+                        player_currency_font = player_currency_font = pygame.font.SysFont(config.Initialise["player_currency_font"][0], round(config.Initialise["player_currency_font"][1]  * ingame_level_data.Ingame_data["resize_factor"]), config.Initialise["player_currency_font"][2], config.Initialise["player_currency_font"][3])
 
                         for i in Enemy_list:
                             i.resize(ingame_level_data.Ingame_data["resize_factor"])

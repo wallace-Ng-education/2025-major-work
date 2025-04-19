@@ -15,9 +15,10 @@ Initialise = {
     "tower_testIMG" : pygame.image.load('pygame major project 2D tower defence by wallace/assets/tower_test.png').convert(),
 
     # text font initialise
-    "enemy_health_font" : pygame.font.SysFont("cambria", 25, False, False),
-    "player_health_font" : pygame.font.SysFont("cambria", 20, True, False),
-    "player_currency_font" : pygame.font.SysFont("cambria", 20, True, False),
+    # consider importing settings to a list that fit into pygame.font.SysFont() -> usually [text family: str, size: int, blod: bool, i]
+    "enemy_health_font" : ["cambria", 25, False, False],
+    "player_health_font" : ["cambria", 20, True, False],
+    "player_currency_font" : ["cambria", 20, True, False],
 
     # frames per second
     "fps" : 30

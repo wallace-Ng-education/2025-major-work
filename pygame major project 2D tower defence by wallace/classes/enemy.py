@@ -8,8 +8,9 @@ import copy
 # get global data from config
 screen = config.Initialise["screen"]
 fps = config.Initialise["fps"]
-enemy_health_font = config.Initialise["enemy_health_font"]
 player_health = config.Level_preset["level1"]["player_health"]
+enemy_health_font = pygame.font.SysFont(config.Initialise["enemy_health_font"][0], config.Initialise["enemy_health_font"][1], config.Initialise["enemy_health_font"][2], config.Initialise["enemy_health_font"][3])
+
 
 
 # use the defined sprite class for its functions
@@ -57,6 +58,7 @@ class Enemy(pygame.sprite.Sprite):
 
     # show health of enemy, logically belongs to the enemy class
     def show_health(self, health: int, location: Vector2):
+        global enemy_health_font
         show_health = enemy_health_font.render(f"{round(health)}", True, (255, 255, 0))
         screen.blit(show_health, location)
 
@@ -114,6 +116,9 @@ class Enemy(pygame.sprite.Sprite):
 
         self.old_resize_factor = resize_factor
 
+        global enemy_health_font
+        enemy_health_font = pygame.font.SysFont(config.Initialise["enemy_health_font"][0], round(config.Initialise["enemy_health_font"][1] * ingame_level_data.Ingame_data["resize_factor"]), config.Initialise["enemy_health_font"][2], config.Initialise["enemy_health_font"][3])
+
 class Snake(Enemy):
     # equal sign
     def __init__(self, level, spawn_time):
@@ -127,13 +132,13 @@ class Ant_g(Enemy):
         self.randint: int = random.randint(-100,100)
 
         # get the width needed to center this message, allow functions in this class to accesss the width 
-        health_message_align: str = f"{self.randint} "
-        health_message_align = enemy_health_font.render(health_message_align, True, (255, 255, 0))
+        health_message_align = enemy_health_font.render(str(self.randint), True, (255, 255, 0))
         # +9 in consideration of the length of the "<" symbol
         self.message_width_half: float = health_message_align.get_rect()[2] + 9
 
     # show a health and the number that it needs to be greater than
     def show_health(self, health: int, location: Vector2):
+        global enemy_health_font
         # get the strings
         health_message: str = f"{self.randint} < {round(health + self.randint)}"
         # turn the strings into pygame rectangles
@@ -142,6 +147,30 @@ class Ant_g(Enemy):
         # center the "<" in health_message 
         message_height_half = health_message.get_rect()[3] / 2
         screen.blit(health_message, (location[0] - self.message_width_half, location[1] - message_height_half))
+
+    # aditionally update the health_message_align
+    def resize(self, resize_factor: float):
+        self.image = pygame.transform.scale_by(self.original_image, resize_factor)
+
+        self.checkpoints = []
+        for i in config.Level_preset[self.level]["checkpoints"]:
+            self.checkpoints.append((i[0] * resize_factor, i[1] * resize_factor))
+
+        self.distance_per_frame = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["distance_per_second"] / fps * resize_factor
+
+        self.location = Vector2(self.location[0] / self.old_resize_factor * resize_factor , self.location[1] / self.old_resize_factor * resize_factor)
+        self.rect = self.image.get_rect()
+        self.rect.center = self.location
+
+        self.old_resize_factor = resize_factor
+
+        global enemy_health_font
+        enemy_health_font = pygame.font.SysFont(config.Initialise["enemy_health_font"][0], round(config.Initialise["enemy_health_font"][1] * ingame_level_data.Ingame_data["resize_factor"]), config.Initialise["enemy_health_font"][2], config.Initialise["enemy_health_font"][3])
+
+        # get the width needed to center this message, allow functions in this class to accesss the width 
+        health_message_align = enemy_health_font.render(str(self.randint), True, (255, 255, 0))
+        # +9 in consideration of the length of the "<" symbol
+        self.message_width_half: float = health_message_align.get_rect()[2] + 9
 
 
 class Ant_s(Enemy):
@@ -159,6 +188,7 @@ class Ant_s(Enemy):
 
     # show a health and the number that it needs to be greater than
     def show_health(self, health: int, location: Vector2):
+        global enemy_health_font
         # get the strings
         health_message: str = f"{self.randint} > {round(-health + self.randint)}"
         # turn the strings into pygame rectangles
@@ -167,5 +197,30 @@ class Ant_s(Enemy):
         # center the ">" in health_message 
         message_height_half = health_message.get_rect()[3] / 2
         screen.blit(health_message, (location[0] - self.message_width_half, location[1] - message_height_half))
+
+    # aditionally update the health_message_align
+    def resize(self, resize_factor: float):
+        self.image = pygame.transform.scale_by(self.original_image, resize_factor)
+
+        self.checkpoints = []
+        for i in config.Level_preset[self.level]["checkpoints"]:
+            self.checkpoints.append((i[0] * resize_factor, i[1] * resize_factor))
+
+        self.distance_per_frame = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["distance_per_second"] / fps * resize_factor
+
+        self.location = Vector2(self.location[0] / self.old_resize_factor * resize_factor , self.location[1] / self.old_resize_factor * resize_factor)
+        self.rect = self.image.get_rect()
+        self.rect.center = self.location
+
+        self.old_resize_factor = resize_factor
+
+        global enemy_health_font
+        enemy_health_font = pygame.font.SysFont(config.Initialise["enemy_health_font"][0], round(config.Initialise["enemy_health_font"][1] * ingame_level_data.Ingame_data["resize_factor"]), config.Initialise["enemy_health_font"][2], config.Initialise["enemy_health_font"][3])
+        
+        # get the width needed to center this message, allow functions in this class to accesss the width 
+        health_message_align = enemy_health_font.render(str(self.randint), True, (255, 255, 0))
+        # +9 in consideration of the length of the ">" symbol
+        self.message_width_half: float = health_message_align.get_rect()[2] + 9
+
 
 ##########################################################################
