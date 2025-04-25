@@ -15,7 +15,6 @@ enemy_health_font = pygame.font.SysFont(config.Initialise["enemy_health_font"][0
 
 # use the defined sprite class for its functions
 class Enemy(pygame.sprite.Sprite):
-    #  these init values will be obtained from the config file
     def __init__(self, enemy_type, level, spawn_time):
         pygame.sprite.Sprite.__init__(self)
 
@@ -50,9 +49,6 @@ class Enemy(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
         self.rect.center = self.location
-
-        self.enemy_mask = pygame.mask.from_surface(self.image)
-        self.mask_image = self.enemy_mask.to_surface()
 
         self.old_resize_factor = 1
 
@@ -117,7 +113,7 @@ class Enemy(pygame.sprite.Sprite):
         self.old_resize_factor = resize_factor
 
         global enemy_health_font
-        enemy_health_font = pygame.font.SysFont(config.Initialise["enemy_health_font"][0], round(config.Initialise["enemy_health_font"][1] * ingame_level_data.Ingame_data["resize_factor"]), config.Initialise["enemy_health_font"][2], config.Initialise["enemy_health_font"][3])
+        enemy_health_font = pygame.font.SysFont(config.Initialise["enemy_health_font"][0], round(config.Initialise["enemy_health_font"][1] * resize_factor), config.Initialise["enemy_health_font"][2], config.Initialise["enemy_health_font"][3])
 
 class Snake(Enemy):
     # equal sign
@@ -221,6 +217,3 @@ class Ant_s(Enemy):
         health_message_align = enemy_health_font.render(str(self.randint), True, (255, 255, 0))
         # +9 in consideration of the length of the ">" symbol
         self.message_width_half: float = health_message_align.get_rect()[2] + 9
-
-
-##########################################################################

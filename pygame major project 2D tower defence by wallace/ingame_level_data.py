@@ -10,6 +10,8 @@ Enemy_dead_list = pygame.sprite.Group()
 Attack_list = pygame.sprite.Group()
 # list of towers
 Tower_list = pygame.sprite.Group()
+# list of shop items
+Shop_item_list: list = []
 
 Ingame_data = {
         "current_player_health": None,
@@ -19,6 +21,7 @@ Ingame_data = {
         "Enemy_dead_list": Enemy_dead_list,
         "Attack_list": Attack_list,
         "Tower_list": Tower_list,
+        "Shop_item_list" : Shop_item_list,
         # resize factor of 1 means no change in sie
         "resize_factor": 1,
         "buttons": []

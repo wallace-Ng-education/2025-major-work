@@ -50,9 +50,6 @@ class linear_attack(Attacks):
         self.line_start = self.location + self.direction.normalize() * 1090
         self.line_end = self.location - self.direction.normalize() * 1090
 
-        # creating a mask for pixel perfect collision check
-        self.linear_mask = pygame.mask.from_surface(self.image)
-
         self.attack_damage_per_second = linear_dps
         # to make the damage output non-affected by framerate adjustments
         self.attack_damage_per_frame = self.attack_damage_per_second / fps

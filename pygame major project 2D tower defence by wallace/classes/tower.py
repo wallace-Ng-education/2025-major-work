@@ -80,7 +80,7 @@ class Tower(pygame.sprite.Sprite):
         self.resize_factor = resize_factor
 
 
-class linear(Tower):
+class Linear(Tower):
     def __init__(self, tower_type, level, location: Vector2):
         super().__init__(tower_type, level, location)
         self.range = 350

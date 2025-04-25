@@ -13,6 +13,7 @@ Initialise = {
     "enemy_snakeIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/enemy_snakeIMG.png').convert_alpha(), 1.3),
     "bullet_IMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/attack_linearIMG.png').convert_alpha(), 0.7),
     "tower_testIMG" : pygame.image.load('pygame major project 2D tower defence by wallace/assets/tower_test.png').convert(),
+    #"shop_itemIMG: pygame.image.load
 
     # text font initialise
     # consider importing settings to a list that fit into pygame.font.SysFont() -> usually [text family: str, size: int, blod: bool, i]
@@ -49,7 +50,7 @@ Level_preset = {
                 "distance_per_second": 100,
                 "image": Initialise["enemy_snakeIMG"],
                 "spawn_time": (tuple([x for x in range(10, 10000)])),
-                "bounty": 10
+                "bounty": 30
             },
             "ant_g": {
                 "health": 100,
@@ -57,14 +58,22 @@ Level_preset = {
                 "distance_per_second": 100,
                 "image": Initialise["enemy_snakeIMG"],
                 "spawn_time": {1, 2,3,4,5,6,7,8,9,20}, # (tuple([x/100 for x in range(1000)])),
-                "bounty": 5
+                "bounty": 15
             }
         },
         "background_image": pygame.image.load('pygame major project 2D tower defence by wallace/assets/level1_background.png'),
         "checkpoints": [(0, 0), (260, 180), (120, 300), (300, 400), (530, 230), (710, 350), (570, 470), (700, 570)],
         "player_health": 100,
-        "player_currency": 10000,
+        "player_currency": 100,
         "rect":{
+            "UI": {
+                "cords": [735, 0 , 200, 540],
+                "color": None,
+                },
+            "battlefield": {
+                "cords": [0, 0 , 735, 540],
+                "color": None,
+                },
             "home": {
                 "cords": [890, 0, 50, 50],
                 "color": (0, 255, 255),
@@ -73,12 +82,10 @@ Level_preset = {
                 "cords": [840, 0, 50, 50],
                 "color": (0, 255, 0),
                 },
-            "shop": {
-                "cords": [735, 50, 205, 490],
-                "color": (30, 10, 0),
-                },
+            },
+        # for every shop item [tower_image, name: str, description: str, price: int, unlocked:bool, price:int]
+        "shop_data": [[Initialise["tower_testIMG"],"Linear tower", "penatrative!", True, 50], [Initialise["tower_testIMG"],"Parabolic tower", "knocks back!", True, 100], [Initialise["tower_testIMG"],"parabolic tower2", "knocks back!", True, 1000]]
         },
-    },
 
     # 2
     "level2": {}
