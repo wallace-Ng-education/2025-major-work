@@ -30,6 +30,7 @@ enemy_health_font = pygame.font.SysFont(config.Initialise["enemy_health_font"][0
 Enemy = classes.enemy.Enemy
 Snake = classes.enemy.Snake
 Linear = classes.tower.Linear
+Parabola = classes.tower.Parabola
 Ant_g = classes.enemy.Ant_g
 Shop_item = classes.shop_item.Shop_item
 
@@ -76,11 +77,16 @@ def display_player_data():
 def place_tower(tower_type, level, location: Vector2):
     original_location = revert_resizing_cords(location)
 
-    if tower_type == "Linear":
-        tower = Linear(tower_type, level, original_location)
-        ingame_level_data.Ingame_data["Tower_list"].add(tower)
+    match tower_type:
+        case "Linear":
+            tower = Linear(tower_type, level, original_location)
+            ingame_level_data.Ingame_data["Tower_list"].add(tower)
+        case "Parabola":
+            tower = Parabola(tower_type, level, original_location)
+            ingame_level_data.Ingame_data["Tower_list"].add(tower)
 
     tower.resize(ingame_level_data.Ingame_data["resize_factor"])
+
 
 def spawn_enemies():
     current_time = pygame.time.get_ticks() / 1000 - time_level_init
@@ -246,16 +252,17 @@ while running:
                                 ingame_level_data.Ingame_data["Tower_list"].empty()
                             elif held_item == None: # pressed shop and has not bought anything yet
                                 for i in Shop_item_list:
-                                    if i.check_press(mouse): # 0 for nothing, 1 for Linear_tower, 2 for Parabolic_tower  
+                                    if i.check_press(mouse): # 0 for nothing, 1 for Linear_tower, 2 for Parabola_tower  
                                         if i.name == "Linear tower":
                                             if ingame_level_data.Ingame_data["current_player_currency"] >= i.price: # enough currency to buy!
                                                 ingame_level_data.Ingame_data["current_player_currency"] -= i.price
                                                 held_item = 1
                                             else: print(f"You need {i.price - ingame_level_data.Ingame_data["current_player_currency"]} more to buy the tower.")
 
-                                        elif i.name == "Parabolic tower":
+                                        elif i.name == "Parabola tower":
                                             if ingame_level_data.Ingame_data["current_player_currency"] >= i.price: # enough currency to buy!
-                                                held_item = 1
+                                                ingame_level_data.Ingame_data["current_player_currency"] -= i.price
+                                                held_item = 2
                                             else: print(f"You need {i.price - ingame_level_data.Ingame_data["current_player_currency"]} more to buy the tower.")
                                             
                                         else:
@@ -264,12 +271,26 @@ while running:
                             else: # clicked on shop UI with a item held -> they should not
                                 print("You are holding a tower! click on the battlefield to place it.") 
 
-                        elif battlefield_rect[0] <= mouse[0] <= (battlefield_rect[0] +battlefield_rect[2]) and battlefield_rect[1] <= mouse[1] <= (battlefield_rect[1] +battlefield_rect[3]): #  pressing on the field
-                            if held_item:
-                                place_tower("Linear", "level1", Vector2(pygame.mouse.get_pos()))
-                                tower_placed += 1
-                                held_item = None
-                            else: print("You are not holding a tower.")
+                        #  pressing on the field
+                        elif battlefield_rect[0] <= mouse[0] <= (battlefield_rect[0] +battlefield_rect[2]) and battlefield_rect[1] <= mouse[1] <= (battlefield_rect[1] +battlefield_rect[3]): 
+                            match held_item:
+                                case None: # check if pressing on tower
+                                    clicked = False
+                                    for i in Tower_list:
+                                        if i.check_press(mouse):
+                                            clicked = True
+                                            break
+                                    if not clicked: # not pressing on any tower
+                                        print("You are not holding or clicking on a tower.")
+
+                                case 1:
+                                    place_tower("Linear", "level1", Vector2(pygame.mouse.get_pos()))
+                                    tower_placed += 1
+                                    held_item = None
+                                case 2:
+                                    place_tower("Parabola", "level1", Vector2(pygame.mouse.get_pos()))
+                                    tower_placed += 1
+                                    held_item = None
                         
                         else: # clicking out of bounds
                             print("Here is out of bounds!")
@@ -298,7 +319,6 @@ while running:
                         background = pygame.transform.scale_by(config.Level_preset["level1"]["background_image"], ingame_level_data.Ingame_data["resize_factor"])
 
 
-                Enemy_list.draw(screen)
                 Tower_list.draw(screen)
 
                 for tower in Tower_list:
@@ -312,6 +332,8 @@ while running:
                 # make every Enemy object do what they are supposed to
                 for enemy in Enemy_list:
                     enemy.move()
+
+                Enemy_list.draw(screen)
 
                 for shop_item in Shop_item_list:
                     shop_item.draw()

@@ -36,7 +36,7 @@ class Enemy(pygame.sprite.Sprite):
         self.original_image = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["image"]
         self.bounty = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["bounty"]
 
-        # get common data for all enemies
+        # set common data for all enemies
         ##################################################################################
         # initially starts as first checkpoint, i.e. first checkpoint is spawn point
         self.location = Vector2(self.checkpoints[0])
@@ -51,6 +51,9 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.center = self.location
 
         self.old_resize_factor = 1
+
+        self.knockback_resistance = 1
+        self.knockback_resistance_growth_value = 1.05   # this value >= 1
 
     # show health of enemy, logically belongs to the enemy class
     def show_health(self, health: int, location: Vector2):
@@ -114,6 +117,12 @@ class Enemy(pygame.sprite.Sprite):
 
         global enemy_health_font
         enemy_health_font = pygame.font.SysFont(config.Initialise["enemy_health_font"][0], round(config.Initialise["enemy_health_font"][1] * resize_factor), config.Initialise["enemy_health_font"][2], config.Initialise["enemy_health_font"][3])
+
+    def knockback(self, knockback_value: int, knock_back_origin: Vector2):
+        knockback_range = (knockback_value - min(self.knockback_resistance, knockback_value)) * pygame.math.Vector2.normalize(self.location - knock_back_origin)
+        self.location += knockback_range
+        self.knockback_resistance *= self.knockback_resistance_growth_value
+
 
 class Snake(Enemy):
     # equal sign

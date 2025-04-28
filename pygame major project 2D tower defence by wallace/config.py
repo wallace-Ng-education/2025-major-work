@@ -11,7 +11,8 @@ Initialise = {
 
     # convert to make it load more quickly, alpha allows image transparency
     "enemy_snakeIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/enemy_snakeIMG.png').convert_alpha(), 1.3),
-    "bullet_IMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/attack_linearIMG.png').convert_alpha(), 0.7),
+    "attack_linearIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/attack_linearIMG.png').convert_alpha(), 0.7),
+    "attack_parabolaIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/attack_parabolaIMG.png').convert_alpha(), 1),
     "tower_testIMG" : pygame.image.load('pygame major project 2D tower defence by wallace/assets/tower_test.png').convert(),
     #"shop_itemIMG: pygame.image.load
 
@@ -63,8 +64,8 @@ Level_preset = {
         },
         "background_image": pygame.image.load('pygame major project 2D tower defence by wallace/assets/level1_background.png'),
         "checkpoints": [(0, 0), (260, 180), (120, 300), (300, 400), (530, 230), (710, 350), (570, 470), (700, 570)],
-        "player_health": 100,
-        "player_currency": 100,
+        "player_health": 10000,
+        "player_currency": 10000,
         "rect":{
             "UI": {
                 "cords": [735, 0 , 200, 540],
@@ -84,7 +85,7 @@ Level_preset = {
                 },
             },
         # for every shop item [tower_image, name: str, description: str, price: int, unlocked:bool, price:int]
-        "shop_data": [[Initialise["tower_testIMG"],"Linear tower", "penatrative!", True, 50], [Initialise["tower_testIMG"],"Parabolic tower", "knocks back!", True, 100], [Initialise["tower_testIMG"],"parabolic tower2", "knocks back!", True, 1000]]
+        "shop_data": [[Initialise["tower_testIMG"],"Linear tower", "penatrative!", True, 50], [Initialise["tower_testIMG"],"Parabola tower", "knocks back!", True, 100], [Initialise["tower_testIMG"],"Parabola tower2", "knocks back!", True, 1000]]
         },
 
     # 2
@@ -92,7 +93,10 @@ Level_preset = {
 }
 
 Tower_preset = {
-    "linear": {
+    "Linear": {
         "dps": 10
+    },
+    "Parabola": {
+        "dps": 5
     }
 }
