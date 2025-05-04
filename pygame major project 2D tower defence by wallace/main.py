@@ -57,8 +57,8 @@ def generate_shop(level : str):
         ingame_level_data.Ingame_data["Shop_item_list"].append(a)
         i += 1
 
-# to be used in the function generate_enemies
 def find_spawn_time(e):
+# to be used in the function generate_enemies
     return(e.spawn_time)
 
 def display_player_data():
@@ -128,11 +128,24 @@ def revert_resizing_cords(cords):
     original_cords = Vector2(cords[0] / ingame_level_data.Ingame_data["resize_factor"], cords[1] / ingame_level_data.Ingame_data["resize_factor"])
     return original_cords
 
+def error_message():
+    for i in error_list:
+        if i[0] > 0:
+            show_error = player_currency_font.render(i[1], True, (255, 0, 0))
+            screen.blit(show_error, [i * ingame_level_data.Ingame_data["resize_factor"] for i in [300, 500 - 40 * error_list.index(i)]])
+            i[0] -= 1 / fps
+        else:
+            error_list.remove(i)
+
 # Game loop
 running = True
 
 # where level 0 is the homepage and level 1 will be battle places.
 level_selected = 0
+
+# stores in format of a list containing duration in seconds and text
+# eg. [1, "Don't press that"] 
+error_list = []
 
 # initialise time right before the loop begins to avoid the delay from running other codes
 clock = pygame.time.Clock()
@@ -169,7 +182,7 @@ while running:
                         mouse = pygame.mouse.get_pos()
                         if tutorial_button_rect[0] <= mouse[0] <= (tutorial_button_rect[0] + tutorial_button_rect[2]) and tutorial_button_rect[1] <= mouse[1] <= (tutorial_button_rect[1] + tutorial_button_rect[3]):
                             # quit the loop of this level and start that of level 1
-                            print("hi")
+                            error_list.append([2, "Not yet implemented."])
                         if level1_button_rect[0] <= mouse[0] <= (level1_button_rect[0] + level1_button_rect[2]) and level1_button_rect[1] <= mouse[1] <= (level1_button_rect[1] + level1_button_rect[3]):
                             # quit the loop of this level and start that of level 1
                             level_selected = 1
@@ -180,6 +193,8 @@ while running:
                         import_rect_settings("home")
                         tutorial_button_rect = ingame_level_data.Ingame_data["rect"]["tutorial"]["cords"]
                         level1_button_rect = ingame_level_data.Ingame_data["rect"]["level1"]["cords"]
+
+                error_message()
 
                 pygame.display.update()
                 clock.tick(fps)
@@ -224,6 +239,27 @@ while running:
                 screen.fill((30, 10, 0))
                 screen.blit(background, (0, 0))
 
+                Tower_list.draw(screen)
+
+                for tower in Tower_list:
+                    tower.aim()
+                #       tower.shoot()
+
+                Attack_list.draw(screen)
+                for attack in Attack_list:
+                    attack.tick()
+
+                # make every Enemy object do what they are supposed to
+                for enemy in Enemy_list:
+                    enemy.move()
+                Enemy_list.draw(screen)
+                for enemy in Enemy_list:
+                    enemy.show_health(enemy.health, enemy.location)
+                    
+
+                for shop_item in Shop_item_list:
+                    shop_item.draw()
+
                 # display buttons, temporary
                 for i in ingame_level_data.Ingame_data["rect"]:
                     button_cords = ingame_level_data.Ingame_data["rect"][str(i)]["cords"]
@@ -257,19 +293,19 @@ while running:
                                             if ingame_level_data.Ingame_data["current_player_currency"] >= i.price: # enough currency to buy!
                                                 ingame_level_data.Ingame_data["current_player_currency"] -= i.price
                                                 held_item = 1
-                                            else: print(f"You need {i.price - ingame_level_data.Ingame_data["current_player_currency"]} more to buy the tower.")
+                                            else: error_list.append([2, f"You need {i.price - ingame_level_data.Ingame_data["current_player_currency"]} more to buy the tower."])
 
                                         elif i.name == "Parabola tower":
                                             if ingame_level_data.Ingame_data["current_player_currency"] >= i.price: # enough currency to buy!
                                                 ingame_level_data.Ingame_data["current_player_currency"] -= i.price
                                                 held_item = 2
-                                            else: print(f"You need {i.price - ingame_level_data.Ingame_data["current_player_currency"]} more to buy the tower.")
+                                            else: error_list.append([2, f"You need {i.price - ingame_level_data.Ingame_data["current_player_currency"]} more to buy the tower."])
                                             
                                         else:
-                                           print(i.name + 'this is not yet implemented')
+                                           error_list.append([2, i.name + 'this is not yet implemented'])
 
                             else: # clicked on shop UI with a item held -> they should not
-                                print("You are holding a tower! click on the battlefield to place it.") 
+                                error_list.append([2, "You are holding a tower! click on the battlefield to place it."]) 
 
                         #  pressing on the field
                         elif battlefield_rect[0] <= mouse[0] <= (battlefield_rect[0] +battlefield_rect[2]) and battlefield_rect[1] <= mouse[1] <= (battlefield_rect[1] +battlefield_rect[3]): 
@@ -281,7 +317,7 @@ while running:
                                             clicked = True
                                             break
                                     if not clicked: # not pressing on any tower
-                                        print("You are not holding or clicking on a tower.")
+                                        error_list.append([2, "You are not holding or clicking on a tower."])
 
                                 case 1:
                                     place_tower("Linear", "level1", Vector2(pygame.mouse.get_pos()))
@@ -293,7 +329,7 @@ while running:
                                     held_item = None
                         
                         else: # clicking out of bounds
-                            print("Here is out of bounds!")
+                            error_list.append([2, "Here is out of bounds!"])
 
 
                     elif event.type == pygame.VIDEORESIZE:
@@ -319,25 +355,6 @@ while running:
                         background = pygame.transform.scale_by(config.Level_preset["level1"]["background_image"], ingame_level_data.Ingame_data["resize_factor"])
 
 
-                Tower_list.draw(screen)
-
-                for tower in Tower_list:
-                    tower.aim()
-                #       tower.shoot()
-
-                Attack_list.draw(screen)
-                for attack in Attack_list:
-                    attack.tick()
-
-                # make every Enemy object do what they are supposed to
-                for enemy in Enemy_list:
-                    enemy.move()
-
-                Enemy_list.draw(screen)
-
-                for shop_item in Shop_item_list:
-                    shop_item.draw()
-
                 # move enemies from prep list to list at certain time
                 spawn_enemies()
                         # OLD:
@@ -355,6 +372,8 @@ while running:
 
                 # display player health
                 display_player_data()
+                
+                error_message()
 
                 # put the changed things on screen
                 pygame.display.update()

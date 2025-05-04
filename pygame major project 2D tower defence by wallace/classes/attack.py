@@ -9,8 +9,8 @@ screen = config.Initialise["screen"]
 attack_linearIMG = config.Initialise["attack_linearIMG"]
 attack_parabolaIMG = config.Initialise["attack_parabolaIMG"]
 fps = config.Initialise["fps"]
-linear_dps = config.Tower_preset["Linear"]["dps"]
-parabola_dps = config.Tower_preset["Parabola"]["dps"]
+linear_dps = config.Tower_preset["Linear tower"]["dps"]
+parabola_dps = config.Tower_preset["Parabola tower"]["dps"]
 
 def sgn(angle):
   if angle == 0:

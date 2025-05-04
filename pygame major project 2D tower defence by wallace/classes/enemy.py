@@ -54,6 +54,7 @@ class Enemy(pygame.sprite.Sprite):
 
         self.knockback_resistance = 1
         self.knockback_resistance_growth_value = 1.05   # this value >= 1
+        self.knockback_minimum = 2
 
     # show health of enemy, logically belongs to the enemy class
     def show_health(self, health: int, location: Vector2):
@@ -93,7 +94,6 @@ class Enemy(pygame.sprite.Sprite):
                 self.location += self.movement.normalize()*self.distance_per_frame
 
             self.rect.center = self.location
-            self.show_health(self.health, self.location)
         # enemy has finished path
         else:
             ingame_level_data.Ingame_data["current_player_health"] -= self.health
@@ -121,7 +121,7 @@ class Enemy(pygame.sprite.Sprite):
     def knockback(self, knockback_value: int, knock_back_origin: Vector2):
         knockback_range = (knockback_value - min(self.knockback_resistance, knockback_value)) * pygame.math.Vector2.normalize(self.location - knock_back_origin)
         self.location += knockback_range
-        self.knockback_resistance *= self.knockback_resistance_growth_value
+        self.knockback_resistance = min(knockback_value - self.knockback_minimum, self.knockback_resistance * self.knockback_resistance_growth_value)
 
 
 class Snake(Enemy):

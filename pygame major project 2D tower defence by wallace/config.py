@@ -13,8 +13,9 @@ Initialise = {
     "enemy_snakeIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/enemy_snakeIMG.png').convert_alpha(), 1.3),
     "attack_linearIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/attack_linearIMG.png').convert_alpha(), 0.7),
     "attack_parabolaIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/attack_parabolaIMG.png').convert_alpha(), 1),
-    "tower_testIMG" : pygame.image.load('pygame major project 2D tower defence by wallace/assets/tower_test.png').convert(),
-    #"shop_itemIMG: pygame.image.load
+    "towerIMG" : pygame.image.load('pygame major project 2D tower defence by wallace/assets/tower.png').convert_alpha(),
+    "queryIMG" : pygame.image.load('pygame major project 2D tower defence by wallace/assets/query.png').convert_alpha(),
+    
 
     # text font initialise
     # consider importing settings to a list that fit into pygame.font.SysFont() -> usually [text family: str, size: int, blod: bool, i]
@@ -64,8 +65,8 @@ Level_preset = {
         },
         "background_image": pygame.image.load('pygame major project 2D tower defence by wallace/assets/level1_background.png'),
         "checkpoints": [(0, 0), (260, 180), (120, 300), (300, 400), (530, 230), (710, 350), (570, 470), (700, 570)],
-        "player_health": 10000,
-        "player_currency": 10000,
+        "player_health": 100,
+        "player_currency": 50,
         "rect":{
             "UI": {
                 "cords": [735, 0 , 200, 540],
@@ -85,7 +86,7 @@ Level_preset = {
                 },
             },
         # for every shop item [tower_image, name: str, description: str, price: int, unlocked:bool, price:int]
-        "shop_data": [[Initialise["tower_testIMG"],"Linear tower", "penatrative!", True, 50], [Initialise["tower_testIMG"],"Parabola tower", "knocks back!", True, 100], [Initialise["tower_testIMG"],"Parabola tower2", "knocks back!", True, 1000]]
+        "shop_data": [["Linear tower", True], ["Parabola tower", True]]
         },
 
     # 2
@@ -93,10 +94,20 @@ Level_preset = {
 }
 
 Tower_preset = {
-    "Linear": {
-        "dps": 10
+    "Linear tower": {
+        "dps": 30,
+        "description" : "penetrative!",
+        "details" : ["This tower shoots a straight line nothing can stop, dealing damage to enemies on", "its path. This is also how linear graphs looks like - also a straight line, extending to", "infinity. The equation would be y = Ax or Ay = x"],
+        "price": 50,
+        "image" : Initialise["towerIMG"],
+        "range" : 200,
     },
-    "Parabola": {
-        "dps": 5
+    "Parabola tower": {
+        "dps": 10,
+        "description" : "Knocks back!",
+        "details" : ["This tower shoots a growing curve knocking back enemies. This is also how parabola", " graphs looks like - also a curve curving at a linear rate. The equation would be y = Ax^2", " or Ay^2 = x, where ^2 means to the power of two. Be aware that you will only learn", " about parabolas facing verticly and horizontally in high school."],
+        "price" : 100,
+        "image" : Initialise["towerIMG"],
+        "range" : 50,
     }
 }

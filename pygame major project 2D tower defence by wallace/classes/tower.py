@@ -8,8 +8,9 @@ import math
 
 # get data from config file
 screen = config.Initialise["screen"]
-tower_testIMG = config.Initialise["tower_testIMG"]
+towerIMG = config.Initialise["towerIMG"]
 fps = config.Initialise["fps"]
+player_health_font = pygame.font.SysFont(config.Initialise["player_health_font"][0], config.Initialise["player_health_font"][1], config.Initialise["player_health_font"][2], config.Initialise["player_health_font"][3])
 
 # get attacks from attack
 Linear_attack = classes.attack.Linear_attack
@@ -33,7 +34,7 @@ class Tower(pygame.sprite.Sprite):
         self.facing_vector = None
         self.distance_between_target_and_tower = None
 
-        self.image = tower_testIMG
+        self.image = towerIMG
         self.rect = self.image.get_rect()
         self.rect.center = self.location
 
@@ -77,7 +78,7 @@ class Tower(pygame.sprite.Sprite):
         pass
 
     def resize(self, resize_factor: float):
-        self.image = pygame.transform.scale_by(tower_testIMG, resize_factor)
+        self.image = pygame.transform.scale_by(towerIMG, resize_factor)
         self.location = (self.original_location[0] * resize_factor , self.original_location[1] * resize_factor)
         self.rect = self.image.get_rect()
         self.rect.center = self.location
@@ -90,14 +91,13 @@ class Tower(pygame.sprite.Sprite):
         self.y = self.location[1]
         if (self.x - self.rect[2] / 2) <= mouse_pos[0] <= (self.x + self.rect[2] / 2) and (self.y - self.rect[3] / 2) <= mouse_pos[1] <= (self.y + self.rect[3] / 2):
             # clicked on this tower
-            print("There is no function for this tower!")
             return True
         else: return False
 
 class Linear(Tower):
     def __init__(self, tower_type, level, location: Vector2):
         super().__init__(tower_type, level, location)
-        self.range = 350
+        self.range = config.Tower_preset["Linear tower"]["range"]
 
     def shoot(self):
         ingame_level_data.Ingame_data["Attack_list"].add(Linear_attack(self.resize_factor, self.facing_vector, self.location))
@@ -106,7 +106,7 @@ class Linear(Tower):
 class Parabola(Tower):
     def __init__(self, tower_type, level, location: list):
         super().__init__(tower_type, level, location)
-        self.range = 200
+        self.range = config.Tower_preset["Parabola tower"]["range"]
         self.extension_calculation = 0 
         self.extension_value = 0   # will be rotated between - to 1 using a sine function
         self.attack_image_facing = pygame.math.Vector2(-1, 0)
@@ -133,23 +133,28 @@ class Parabola(Tower):
         else: # in cooldown --> may not attack
             self.cooldown -= 1
 
-
     def rotate(self, facing_location): # change facing vector, thus change angle
         self.facing_vector = self.location - pygame.math.Vector2(facing_location)
         self.angle = self.facing_vector.angle_to(self.attack_image_facing)
-
 
     def shoot(self):
         ingame_level_data.Ingame_data["Attack_list"].add(Parabola_attack(self.resize_factor, self.angle, self.location, self.extension_value))
 
     def check_press(self, mouse_pos: Vector2):
         # check if pressed on this item
-        # self.location is the center of towers
+        # self.location is the center of towers 
         self.x = self.location[0]
         self.y = self.location[1]
         if (self.x - self.rect[2] / 2) <= mouse_pos[0] <= (self.x + self.rect[2] / 2) and (self.y - self.rect[3] / 2) <= mouse_pos[1] <= (self.y + self.rect[3] / 2):
+            pygame.draw.rect(screen, (0, 0, 0), [i * ingame_level_data.Ingame_data["resize_factor"] for i in [735, 50, 205, 540]])
+            # instructions
+            click_message1 = player_health_font.render("Click on the direction ", True, (255, 255, 255))
+            click_message2 = player_health_font.render("the tower should face! ", True, (255, 255, 255))
+            screen.blit(click_message1, [i * ingame_level_data.Ingame_data["resize_factor"] for i in [735, 50]])
+            screen.blit(click_message2, [i * ingame_level_data.Ingame_data["resize_factor"] for i in [735, 75]])
+            pygame.display.update([i * ingame_level_data.Ingame_data["resize_factor"] for i in [735, 50, 205, 540]])
+            
             # clicked on this tower
-            print("click again to pick facing direction.")
             menu = True
             while menu:
                 for event in pygame.event.get():
