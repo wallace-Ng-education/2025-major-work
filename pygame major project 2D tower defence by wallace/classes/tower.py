@@ -29,6 +29,7 @@ class Tower(pygame.sprite.Sprite):
         self.resize_factor = 1
 
         self.range = None
+        self.original_range = None
         # stores an object of class enemy
         self.targeted_enemy = None
         self.facing_vector = None
@@ -78,11 +79,16 @@ class Tower(pygame.sprite.Sprite):
         pass
 
     def resize(self, resize_factor: float):
+        global player_health_font
+        player_health_font = pygame.font.SysFont(config.Initialise["player_health_font"][0], round(config.Initialise["player_health_font"][1] * resize_factor), config.Initialise["player_health_font"][2], config.Initialise["player_health_font"][3])
+
         self.image = pygame.transform.scale_by(towerIMG, resize_factor)
         self.location = (self.original_location[0] * resize_factor , self.original_location[1] * resize_factor)
         self.rect = self.image.get_rect()
         self.rect.center = self.location
+        if self.original_range: self.range = self.original_range * resize_factor
         self.resize_factor = resize_factor
+
 
     def check_press(self, mouse_pos: Vector2):
         # check if pressed on this item
@@ -91,12 +97,24 @@ class Tower(pygame.sprite.Sprite):
         self.y = self.location[1]
         if (self.x - self.rect[2] / 2) <= mouse_pos[0] <= (self.x + self.rect[2] / 2) and (self.y - self.rect[3] / 2) <= mouse_pos[1] <= (self.y + self.rect[3] / 2):
             # clicked on this tower
+            
+            if self.range:
+                pygame.draw.circle(screen, (255, 255, 255), self.location, self.range, width=1)
+                pygame.display.update()
+                # clicked on this tower
+                pause = True
+                while pause:
+                    for event in pygame.event.get():
+                        if event.type == pygame.MOUSEBUTTONDOWN:
+                            pause = False
+                            break
             return True
         else: return False
 
 class Linear(Tower):
     def __init__(self, tower_type, level, location: Vector2):
         super().__init__(tower_type, level, location)
+        self.original_range = config.Tower_preset["Linear tower"]["range"]
         self.range = config.Tower_preset["Linear tower"]["range"]
 
     def shoot(self):
@@ -106,6 +124,7 @@ class Linear(Tower):
 class Parabola(Tower):
     def __init__(self, tower_type, level, location: list):
         super().__init__(tower_type, level, location)
+        self.original_range = config.Tower_preset["Parabola tower"]["range"]
         self.range = config.Tower_preset["Parabola tower"]["range"]
         self.extension_calculation = 0 
         self.extension_value = 0   # will be rotated between - to 1 using a sine function
@@ -152,15 +171,17 @@ class Parabola(Tower):
             click_message2 = player_health_font.render("the tower should face! ", True, (255, 255, 255))
             screen.blit(click_message1, [i * ingame_level_data.Ingame_data["resize_factor"] for i in [735, 50]])
             screen.blit(click_message2, [i * ingame_level_data.Ingame_data["resize_factor"] for i in [735, 75]])
-            pygame.display.update([i * ingame_level_data.Ingame_data["resize_factor"] for i in [735, 50, 205, 540]])
+            pygame.draw.circle(screen, (255, 255, 255), self.location, self.range, width=1)
+
+            pygame.display.update()
             
             # clicked on this tower
-            menu = True
-            while menu:
+            pause = True
+            while pause:
                 for event in pygame.event.get():
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         mouse = pygame.mouse.get_pos()
-                        menu = False
+                        pause = False
                         break
             self.rotate(mouse)
             return True

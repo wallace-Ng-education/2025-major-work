@@ -36,7 +36,17 @@ Shop_item = classes.shop_item.Shop_item
 
 
 def generate_enemies(level : str):
-# with the format of "level1" for the level parameter
+    """
+    prepare Enemy objects to be spawned
+
+    Args:
+        level: A string (levelx) representing the level to get the data from, where x is an integer
+
+    Result:
+        Enemy objects to be spawned in the level is all in Enemy_prep_list which is stored in ingame_level_data.py,
+        sorted according to their spawn time.
+    """
+    ingame_level_data.Ingame_data["Enemy_prep_list"] = []
     for enemy_type in config.Level_preset[level]["enemy_data"]:
         if enemy_type == "snake":
             for spawn_time in config.Level_preset[level]["enemy_data"]["snake"]["spawn_time"]:
@@ -49,19 +59,44 @@ def generate_enemies(level : str):
     ingame_level_data.Ingame_data["Enemy_prep_list"].sort(key=find_spawn_time)
 
 def generate_shop(level : str):
-# with the format of "level1" for the level parameter
-    i = 0
-    for shop_item in config.Level_preset[level]["shop_data"]:
+    """
+    prepares Shop_item objects
+
+    Args:
+        level: A string (levelx) representing the level to get the data from, where x is an integer
+
+    Results:
+        Shop_item objects to be shown in the level is all in Shop_item_list which is stored in ingame_level_data.py,
+    """
+    for i in range(0, len(config.Level_preset[level]["shop_data"])):
         a = Shop_item(i, level)
         a.resize(ingame_level_data.Ingame_data["resize_factor"])
         ingame_level_data.Ingame_data["Shop_item_list"].append(a)
-        i += 1
 
-def find_spawn_time(e):
+def find_spawn_time(enemy):
+    """
+    find how many seconds after the level starts should the enemy spawn.
+    Used in generate_enemies function.
+
+    Args:
+        enemy: A Enemy class object
+
+    Returns:
+        enemy.spawn_time: Spawn time of enemies
+    """
 # to be used in the function generate_enemies
-    return(e.spawn_time)
+    return(enemy.spawn_time)
 
 def display_player_data():
+    """
+    draws player health and currency on the screen 
+    
+    Args:
+        None
+    
+    Result:
+        The data is being drawn on screen with suitable fonts
+    """
     # health
     show_health = player_health_font.render(f"{round(ingame_level_data.Ingame_data["current_player_health"])}", True, (255, 255, 255))
     # draw it at left bottom corner with a 10px padding
@@ -75,6 +110,15 @@ def display_player_data():
     screen.blit(show_currency, [i * ingame_level_data.Ingame_data["resize_factor"] for i in original_show_currency_cords])
 
 def place_tower(tower_type, level, location: Vector2):
+    """
+    Place a tower
+
+    Args:
+        None
+    
+    Result:
+        A tower object from the Tower class is created and added into the Tower_list
+    """
     original_location = revert_resizing_cords(location)
 
     match tower_type:
@@ -87,16 +131,32 @@ def place_tower(tower_type, level, location: Vector2):
 
     tower.resize(ingame_level_data.Ingame_data["resize_factor"])
 
-
 def spawn_enemies():
+    """
+    Spawn prepared enemies
+
+    Args:
+        None
+    
+    Result:
+        A enemy object from the Tower class is moved from the Enemy_prep_list to the ENemy_list
+    """
     current_time = pygame.time.get_ticks() / 1000 - time_level_init
     while 0 < len(Enemy_prep_list) and Enemy_prep_list[0].spawn_time <= current_time:
         Enemy_prep_list[0].resize(ingame_level_data.Ingame_data["resize_factor"])
         Enemy_list.add(Enemy_prep_list[0])
         Enemy_prep_list.pop(0)
 
-# give a factor for everything to be resized to
 def resize_factor_get():
+    """
+    find the factor for everything to be resized to
+
+    Args:
+        None
+    
+    Result:
+        resize_factor is calculated in order to keep everything in the screen despite the size change 
+    """
     old_width, old_height = config.Initialise["screen_size"]
     new_width, new_height = pygame.display.get_surface().get_size()
     
@@ -110,6 +170,16 @@ def resize_factor_get():
         ingame_level_data.Ingame_data["resize_factor"] = height_factor
 
 def import_rect_settings(level : str):
+    """
+    resize rectangles
+
+    Args:
+        level: A string (levelx) representing the level to get the data from, where x is an integer
+
+    
+    Result:
+        rectangles representing buttons are resized
+    """
 # with the format of "level1" for the level parameter
 
     # import the new rectangle settings into ingame data by first clearing the old one
@@ -125,10 +195,29 @@ def import_rect_settings(level : str):
                     ingame_level_data.Ingame_data["rect"][str(i)]["cords"][j] *= ingame_level_data.Ingame_data["resize_factor"]
 
 def revert_resizing_cords(cords):
+    """
+    revert the resizing process
+    by getting a resized coordinate and divide components by resize_factor
+
+    Args:
+        cords: Vector2
+    
+    Return:
+        original_cords: the original coordinate ( original when resize factor = 1 ) 
+    """
     original_cords = Vector2(cords[0] / ingame_level_data.Ingame_data["resize_factor"], cords[1] / ingame_level_data.Ingame_data["resize_factor"])
     return original_cords
 
 def error_message():
+    """
+    draws a alerting message on the screen 
+    
+    Args:
+        None
+    
+    Result:
+        The message is being drawn on screen with suitable fonts
+    """
     for i in error_list:
         if i[0] > 0:
             show_error = player_currency_font.render(i[1], True, (255, 0, 0))
@@ -161,6 +250,9 @@ while running:
             import_rect_settings("home")
             tutorial_button_rect = ingame_level_data.Ingame_data["rect"]["tutorial"]["cords"]
             level1_button_rect = ingame_level_data.Ingame_data["rect"]["level1"]["cords"]
+            player_currency_font = player_currency_font = pygame.font.SysFont(config.Initialise["player_currency_font"][0], round(config.Initialise["player_currency_font"][1]  * ingame_level_data.Ingame_data["resize_factor"]), config.Initialise["player_currency_font"][2], config.Initialise["player_currency_font"][3])
+            player_health_font = pygame.font.SysFont(config.Initialise["player_health_font"][0], round(config.Initialise["player_health_font"][1] * ingame_level_data.Ingame_data["resize_factor"]), config.Initialise["player_health_font"][2], config.Initialise["player_health_font"][3])
+
 
             while home_running:
                 screen.fill((232, 185, 77))
@@ -193,6 +285,9 @@ while running:
                         import_rect_settings("home")
                         tutorial_button_rect = ingame_level_data.Ingame_data["rect"]["tutorial"]["cords"]
                         level1_button_rect = ingame_level_data.Ingame_data["rect"]["level1"]["cords"]
+                        player_currency_font = player_currency_font = pygame.font.SysFont(config.Initialise["player_currency_font"][0], round(config.Initialise["player_currency_font"][1]  * ingame_level_data.Ingame_data["resize_factor"]), config.Initialise["player_currency_font"][2], config.Initialise["player_currency_font"][3])
+                        player_health_font = pygame.font.SysFont(config.Initialise["player_health_font"][0], round(config.Initialise["player_health_font"][1] * ingame_level_data.Ingame_data["resize_factor"]), config.Initialise["player_health_font"][2], config.Initialise["player_health_font"][3])
+
 
                 error_message()
 
@@ -239,6 +334,11 @@ while running:
                 screen.fill((30, 10, 0))
                 screen.blit(background, (0, 0))
 
+                # display player health
+                display_player_data()
+                
+                error_message()
+
                 Tower_list.draw(screen)
 
                 for tower in Tower_list:
@@ -253,6 +353,7 @@ while running:
                 for enemy in Enemy_list:
                     enemy.move()
                 Enemy_list.draw(screen)
+
                 for enemy in Enemy_list:
                     enemy.show_health(enemy.health, enemy.location)
                     
@@ -370,10 +471,6 @@ while running:
                     running = False
                     level1_running = False
 
-                # display player health
-                display_player_data()
-                
-                error_message()
 
                 # put the changed things on screen
                 pygame.display.update()

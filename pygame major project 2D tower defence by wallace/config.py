@@ -66,7 +66,7 @@ Level_preset = {
         "background_image": pygame.image.load('pygame major project 2D tower defence by wallace/assets/level1_background.png'),
         "checkpoints": [(0, 0), (260, 180), (120, 300), (300, 400), (530, 230), (710, 350), (570, 470), (700, 570)],
         "player_health": 100,
-        "player_currency": 50,
+        "player_currency": 500,
         "rect":{
             "UI": {
                 "cords": [735, 0 , 200, 540],
@@ -108,6 +108,6 @@ Tower_preset = {
         "details" : ["This tower shoots a growing curve knocking back enemies. This is also how parabola", " graphs looks like - also a curve curving at a linear rate. The equation would be y = Ax^2", " or Ay^2 = x, where ^2 means to the power of two. Be aware that you will only learn", " about parabolas facing verticly and horizontally in high school."],
         "price" : 100,
         "image" : Initialise["towerIMG"],
-        "range" : 50,
+        "range" : 230,
     }
 }
