@@ -11,9 +11,13 @@ Initialise = {
 
     # convert to make it load more quickly, alpha allows image transparency
     "enemy_snakeIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/enemy_snakeIMG.png').convert_alpha(), 1.3),
+    "enemy_ant_gIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/enemy_ant_gIMG.png').convert_alpha(), 1.3),
+    "enemy_ant_sIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/enemy_ant_sIMG.png').convert_alpha(), 1.3),
+
     "attack_linearIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/attack_linearIMG.png').convert_alpha(), 0.7),
     "attack_parabolaIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/attack_parabolaIMG.png').convert_alpha(), 1),
-    "towerIMG" : pygame.image.load('pygame major project 2D tower defence by wallace/assets/tower.png').convert_alpha(),
+    "tower_linearIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/tower_linearIMG.png').convert_alpha(), 0.8),
+    "tower_parabolaIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/tower_parabolaIMG.png').convert_alpha(), 0.8),
     "queryIMG" : pygame.image.load('pygame major project 2D tower defence by wallace/assets/query.png').convert_alpha(),
     
 
@@ -58,8 +62,16 @@ Level_preset = {
                 "health": 100,
                 # distance in pixels
                 "distance_per_second": 100,
-                "image": Initialise["enemy_snakeIMG"],
-                "spawn_time": {1, 2,3,4,5,6,7,8,9,20}, # (tuple([x/100 for x in range(1000)])),
+                "image": Initialise["enemy_ant_gIMG"],
+                "spawn_time": {1, 2,3,4,5}, # (tuple([x/100 for x in range(1000)])),
+                "bounty": 15
+            },
+            "ant_s": {
+                "health": 100,
+                # distance in pixels
+                "distance_per_second": 100,
+                "image": Initialise["enemy_ant_sIMG"],
+                "spawn_time": {7,8,9,20}, # (tuple([x/100 for x in range(1000)])),
                 "bounty": 15
             }
         },
@@ -99,7 +111,7 @@ Tower_preset = {
         "description" : "penetrative!",
         "details" : ["This tower shoots a straight line nothing can stop, dealing damage to enemies on", "its path. This is also how linear graphs looks like - also a straight line, extending to", "infinity. The equation would be y = Ax or Ay = x"],
         "price": 50,
-        "image" : Initialise["towerIMG"],
+        "image" : Initialise["tower_linearIMG"],
         "range" : 200,
     },
     "Parabola tower": {
@@ -107,7 +119,7 @@ Tower_preset = {
         "description" : "Knocks back!",
         "details" : ["This tower shoots a growing curve knocking back enemies. This is also how parabola", " graphs looks like - also a curve curving at a linear rate. The equation would be y = Ax^2", " or Ay^2 = x, where ^2 means to the power of two. Be aware that you will only learn", " about parabolas facing verticly and horizontally in high school."],
         "price" : 100,
-        "image" : Initialise["towerIMG"],
+        "image" : Initialise["tower_parabolaIMG"],
         "range" : 230,
     }
 }
