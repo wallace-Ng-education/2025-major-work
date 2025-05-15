@@ -62,14 +62,14 @@ class Shop_item():
     def draw(self):
         pygame.draw.rect(screen, (102, 51, 0), pygame.Rect(self.rect))
         pygame.draw.rect(screen, (153, 102, 0), pygame.Rect(self.inner_rect))
-        screen.blit(self.towerIMG, (self.towerIMG_x , self.towerIMG_y))
         screen.blit(self.show_name, (self.name_x, self.name_y))
+        screen.blit(self.towerIMG, (self.towerIMG_x , self.towerIMG_y))
         screen.blit(self.show_description, (self.description_x, self.description_y))
         screen.blit(self.show_price, (self.price_x, self.price_y))
         screen.blit(self.queryIMG, (self.queryIMG_x , self.queryIMG_y))
 
     def resize(self, resize_factor):
-        self.towerIMG = pygame.transform.scale_by(self.original_towerIMG, resize_factor)
+        self.towerIMG = pygame.transform.scale_by(self.original_towerIMG, resize_factor * 0.6)
         self.queryIMG = pygame.transform.scale_by(queryIMG, resize_factor)
 
         self.rect = (740 * resize_factor, float(60 + 80 * self.position_in_list) * resize_factor, 195 * resize_factor, 70 * resize_factor)
@@ -77,8 +77,8 @@ class Shop_item():
         self.y = self.rect[1]
 
         # images
-        self.towerIMG_x = self.x + (10 * resize_factor)
-        self.towerIMG_y = self.y + (10 * resize_factor)
+        self.towerIMG_x = self.x + (3 * resize_factor)
+        self.towerIMG_y = self.y + (-40 * resize_factor)
 
         self.inner_rect = (self.rect[0] + (5 * resize_factor), self.rect[1] + (5 * resize_factor), self.rect[2] - (10 * resize_factor), self.rect[3] - (10 * resize_factor))
 
@@ -92,10 +92,10 @@ class Shop_item():
         self.small_font = pygame.font.SysFont(config.Initialise["player_currency_font"][0], round(config.Initialise["player_currency_font"][1] * resize_factor / 2), config.Initialise["player_currency_font"][2], config.Initialise["player_currency_font"][3])
 
         self.name_x = self.x + (50 * resize_factor)
-        self.name_y = self.towerIMG_y
+        self.name_y = self.y + (10 * resize_factor)
         self.show_name = self.big_font.render(self.name , True, (255, 255, 255))
 
-        self.description_x = self.towerIMG_x
+        self.description_x = self.x + (10 * resize_factor)
         self.description_y = self.y + (50 * resize_factor)
         self.show_description = self.small_font.render(self.description , True, (255, 255, 255))
 

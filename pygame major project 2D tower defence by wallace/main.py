@@ -32,6 +32,7 @@ Snake = classes.enemy.Snake
 Linear = classes.tower.Linear
 Parabola = classes.tower.Parabola
 Ant_g = classes.enemy.Ant_g
+Ant_s = classes.enemy.Ant_s
 Shop_item = classes.shop_item.Shop_item
 
 
@@ -55,6 +56,10 @@ def generate_enemies(level : str):
         if enemy_type == "ant_g":
             for spawn_time in config.Level_preset[level]["enemy_data"]["ant_g"]["spawn_time"]:
                 a = Ant_g(level, spawn_time)
+                ingame_level_data.Ingame_data["Enemy_prep_list"].append(a)
+        if enemy_type == "ant_s":
+            for spawn_time in config.Level_preset[level]["enemy_data"]["ant_s"]["spawn_time"]:
+                a = Ant_s(level, spawn_time)
                 ingame_level_data.Ingame_data["Enemy_prep_list"].append(a)
     ingame_level_data.Ingame_data["Enemy_prep_list"].sort(key=find_spawn_time)
 
@@ -109,27 +114,99 @@ def display_player_data():
     original_show_currency_cords = (760, 25)
     screen.blit(show_currency, [i * ingame_level_data.Ingame_data["resize_factor"] for i in original_show_currency_cords])
 
+def path_point_distance_check(level: str, location: Vector2, min_distance: float):
+    """
+    Check distance between the enemy path and a point, so that the towers will not be placed on the path
+
+    Args:
+        level: A string (levelx) representing the level to get the data from, where x is an integer
+        location: where to place
+        min_distance: how far should the tower should be from any path
+    
+    Returns:
+        distance: float
+    """
+    checkpoint_list = list(config.Level_preset[level]["checkpoints"])
+    old_point = None
+    min_distance *= ingame_level_data.Ingame_data["resize_factor"]
+
+    for i in checkpoint_list:
+        i = Vector2(i)
+
+        if old_point:
+            # some vector manipulations to find out distance of the 
+            path_normalized = pygame.Vector2.normalize(i - old_point)
+            projection_from_i = pygame.Vector2.dot(path_normalized, i - location) * path_normalized
+            projection_from_old_point = pygame.Vector2.dot(path_normalized, old_point - location) * path_normalized
+            
+            # The dot product of two vectors that are parallel but in opposite directions is negative
+            # prevents checking for locations beyond the path segment
+            # revise vectors if you don't understand
+            if pygame.Vector2.dot(projection_from_i, projection_from_old_point) < 0:
+                location_to_vector = projection_from_i - i + location
+                magnitude = pygame.Vector2.magnitude(location_to_vector)
+                #print(magnitude)
+                
+                if magnitude < min_distance:
+                    return False
+                
+        # a circle near each check point to make up for a gap
+        if pygame.Vector2.magnitude(i - location) < min_distance:
+            return False
+
+        # set up i as old_point to be used by next i
+        old_point = i
+        #print("")
+    
+    # if did not return False
+    return True
+
+def revert_resizing_cords(cords):
+    """
+    revert the resizing process
+    by getting a resized coordinate and divide components by resize_factor
+
+    Args:
+        cords: Vector2
+    
+    Return:
+        original_cords: the original coordinate ( original when resize factor = 1 ) 
+    """
+    original_cords = Vector2(cords[0] / ingame_level_data.Ingame_data["resize_factor"], cords[1] / ingame_level_data.Ingame_data["resize_factor"])
+    return original_cords
+
+
 def place_tower(tower_type, level, location: Vector2):
     """
     Place a tower
 
     Args:
-        None
+        tower_type: "Linear" or "Parabola"
+        level: A string (levelx) representing the level to get the data from, where x is an integer
+        location: where to place
     
     Result:
         A tower object from the Tower class is created and added into the Tower_list
     """
     original_location = revert_resizing_cords(location)
+    # place tower base at where clicked
+    original_location = [original_location[0], original_location[1] - 35]
 
-    match tower_type:
-        case "Linear":
-            tower = Linear(tower_type, level, original_location)
-            ingame_level_data.Ingame_data["Tower_list"].add(tower)
-        case "Parabola":
-            tower = Parabola(tower_type, level, original_location)
-            ingame_level_data.Ingame_data["Tower_list"].add(tower)
+    if path_point_distance_check(level, location, 60*ingame_level_data.Ingame_data["resize_factor"]):
+        match tower_type:
+            case "Linear":
+                tower = Linear(tower_type, level, original_location)
+                ingame_level_data.Ingame_data["Tower_list"].add(tower)
+            case "Parabola":
+                tower = Parabola(tower_type, level, original_location)
+                ingame_level_data.Ingame_data["Tower_list"].add(tower)
 
-    tower.resize(ingame_level_data.Ingame_data["resize_factor"])
+        tower.resize(ingame_level_data.Ingame_data["resize_factor"])
+        ingame_level_data.Ingame_data["tower_placed"] += 1
+        ingame_level_data.Ingame_data["held_item"] = None
+
+    else:
+        error_list.append([2, "Too close to path."])
 
 def spawn_enemies():
     """
@@ -194,20 +271,6 @@ def import_rect_settings(level : str):
         for j in range(0,4): # make change due to the resizing
                     ingame_level_data.Ingame_data["rect"][str(i)]["cords"][j] *= ingame_level_data.Ingame_data["resize_factor"]
 
-def revert_resizing_cords(cords):
-    """
-    revert the resizing process
-    by getting a resized coordinate and divide components by resize_factor
-
-    Args:
-        cords: Vector2
-    
-    Return:
-        original_cords: the original coordinate ( original when resize factor = 1 ) 
-    """
-    original_cords = Vector2(cords[0] / ingame_level_data.Ingame_data["resize_factor"], cords[1] / ingame_level_data.Ingame_data["resize_factor"])
-    return original_cords
-
 def error_message():
     """
     draws a alerting message on the screen 
@@ -225,6 +288,9 @@ def error_message():
             i[0] -= 1 / fps
         else:
             error_list.remove(i)
+
+
+
 
 # Game loop
 running = True
@@ -302,7 +368,7 @@ while running:
             generate_enemies("level1")
             generate_shop("level1")
             background = config.Level_preset["level1"]["background_image"]
-            tower_placed = 0
+            a = 0
 
             # import retangles
             import_rect_settings("level1")
@@ -322,7 +388,7 @@ while running:
             Attack_list = ingame_level_data.Ingame_data["Attack_list"]
             Shop_item_list = ingame_level_data.Ingame_data["Shop_item_list"]
 
-            held_item = None
+            ingame_level_data.Ingame_data["held_item"] = None
 
             # start loop for level 1
             while level1_running:
@@ -387,19 +453,34 @@ while running:
                                 ingame_level_data.Ingame_data["Enemy_list"].empty()
                                 ingame_level_data.Ingame_data["Enemy_prep_list"] = []
                                 ingame_level_data.Ingame_data["Tower_list"].empty()
-                            elif held_item == None: # pressed shop and has not bought anything yet
+
+                            elif pause_button_rect[0] <= mouse[0] <= (pause_button_rect[0] + pause_button_rect[2]) and pause_button_rect[1] <= mouse[1] <= (pause_button_rect[1] + pause_button_rect[3]):
+                                pause = True
+                                message = player_health_font.render("click again to resume." , True, (255, 255, 255))
+                                message_rect = message.get_rect()
+                                message_rect.center = (config.Initialise["screen_size"][0] / 2, config.Initialise["screen_size"][1] / 2)
+                                screen.blit(message, message_rect)
+                                pygame.display.update()
+                                while pause:
+                                    for event in pygame.event.get():
+                                        if event.type == pygame.MOUSEBUTTONDOWN:
+                                            pause = False
+
+                            elif ingame_level_data.Ingame_data["held_item"] == None: # pressed shop and has not bought anything yet
                                 for i in Shop_item_list:
                                     if i.check_press(mouse): # 0 for nothing, 1 for Linear_tower, 2 for Parabola_tower  
                                         if i.name == "Linear tower":
                                             if ingame_level_data.Ingame_data["current_player_currency"] >= i.price: # enough currency to buy!
                                                 ingame_level_data.Ingame_data["current_player_currency"] -= i.price
-                                                held_item = 1
+                                                ingame_level_data.Ingame_data["held_item"] = 1
+                                                break
                                             else: error_list.append([2, f"You need {i.price - ingame_level_data.Ingame_data["current_player_currency"]} more to buy the tower."])
 
                                         elif i.name == "Parabola tower":
                                             if ingame_level_data.Ingame_data["current_player_currency"] >= i.price: # enough currency to buy!
                                                 ingame_level_data.Ingame_data["current_player_currency"] -= i.price
-                                                held_item = 2
+                                                ingame_level_data.Ingame_data["held_item"] = 2
+                                                break
                                             else: error_list.append([2, f"You need {i.price - ingame_level_data.Ingame_data["current_player_currency"]} more to buy the tower."])
                                             
                                         else:
@@ -410,7 +491,7 @@ while running:
 
                         #  pressing on the field
                         elif battlefield_rect[0] <= mouse[0] <= (battlefield_rect[0] +battlefield_rect[2]) and battlefield_rect[1] <= mouse[1] <= (battlefield_rect[1] +battlefield_rect[3]): 
-                            match held_item:
+                            match ingame_level_data.Ingame_data["held_item"]:
                                 case None: # check if pressing on tower
                                     clicked = False
                                     for i in Tower_list:
@@ -422,12 +503,9 @@ while running:
 
                                 case 1:
                                     place_tower("Linear", "level1", Vector2(pygame.mouse.get_pos()))
-                                    tower_placed += 1
-                                    held_item = None
+
                                 case 2:
                                     place_tower("Parabola", "level1", Vector2(pygame.mouse.get_pos()))
-                                    tower_placed += 1
-                                    held_item = None
                         
                         else: # clicking out of bounds
                             error_list.append([2, "Here is out of bounds!"])
@@ -471,11 +549,10 @@ while running:
                     running = False
                     level1_running = False
 
-
                 # put the changed things on screen
                 pygame.display.update()
 
-                # print(datetime.now() - start_time, "tower placed:", tower_placed)
+                # print(datetime.now() - start_time, "tower placed:", a)
                 clock.tick(fps)
 
 pygame.quit()

@@ -8,7 +8,8 @@ import math
 
 # get data from config file
 screen = config.Initialise["screen"]
-towerIMG = config.Initialise["towerIMG"]
+tower_linearIMG = config.Initialise["tower_linearIMG"]
+tower_parabolaIMG = config.Initialise["tower_parabolaIMG"]
 fps = config.Initialise["fps"]
 player_health_font = pygame.font.SysFont(config.Initialise["player_health_font"][0], config.Initialise["player_health_font"][1], config.Initialise["player_health_font"][2], config.Initialise["player_health_font"][3])
 
@@ -35,7 +36,7 @@ class Tower(pygame.sprite.Sprite):
         self.facing_vector = None
         self.distance_between_target_and_tower = None
 
-        self.image = towerIMG
+        self.image = tower_linearIMG
         self.rect = self.image.get_rect()
         self.rect.center = self.location
 
@@ -82,7 +83,7 @@ class Tower(pygame.sprite.Sprite):
         global player_health_font
         player_health_font = pygame.font.SysFont(config.Initialise["player_health_font"][0], round(config.Initialise["player_health_font"][1] * resize_factor), config.Initialise["player_health_font"][2], config.Initialise["player_health_font"][3])
 
-        self.image = pygame.transform.scale_by(towerIMG, resize_factor)
+        self.image = pygame.transform.scale_by(tower_linearIMG, resize_factor)
         self.location = (self.original_location[0] * resize_factor , self.original_location[1] * resize_factor)
         self.rect = self.image.get_rect()
         self.rect.center = self.location
@@ -124,6 +125,7 @@ class Linear(Tower):
 class Parabola(Tower):
     def __init__(self, tower_type, level, location: list):
         super().__init__(tower_type, level, location)
+        self.image = tower_parabolaIMG
         self.original_range = config.Tower_preset["Parabola tower"]["range"]
         self.range = config.Tower_preset["Parabola tower"]["range"]
         self.extension_calculation = 0 
@@ -186,3 +188,14 @@ class Parabola(Tower):
             self.rotate(mouse)
             return True
         else: return False
+
+    def resize(self, resize_factor: float):
+        global player_health_font
+        player_health_font = pygame.font.SysFont(config.Initialise["player_health_font"][0], round(config.Initialise["player_health_font"][1] * resize_factor), config.Initialise["player_health_font"][2], config.Initialise["player_health_font"][3])
+
+        self.image = pygame.transform.scale_by(tower_parabolaIMG, resize_factor)
+        self.location = (self.original_location[0] * resize_factor , self.original_location[1] * resize_factor)
+        self.rect = self.image.get_rect()
+        self.rect.center = self.location
+        if self.original_range: self.range = self.original_range * resize_factor
+        self.resize_factor = resize_factor

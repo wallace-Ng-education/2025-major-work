@@ -53,8 +53,8 @@ class Enemy(pygame.sprite.Sprite):
         self.old_resize_factor = 1
 
         self.knockback_resistance = 1
-        self.knockback_resistance_growth_value = 1.05   # this value >= 1
-        self.knockback_minimum = 2
+        self.knockback_resistance_growth_value = 1.1   # this value >= 1
+        self.knockback_minimum = 1.5
 
     # show health of enemy, logically belongs to the enemy class
     def show_health(self, health: int, location: Vector2):
@@ -128,6 +128,34 @@ class Snake(Enemy):
     # equal sign
     def __init__(self, level, spawn_time):
         Enemy.__init__(self, "snake", level, spawn_time)
+        self.original_message_align = 5
+
+    # show health of enemy, logically belongs to the enemy class
+    def show_health(self, health: int, location: Vector2):
+        global enemy_health_font
+        show_health = enemy_health_font.render(f"{round(health)}", True, (255, 255, 0))
+        screen.blit(show_health, (location[0], location[1] - self.message_align))
+
+    def resize(self, resize_factor: float):
+        self.message_align = self.original_message_align * resize_factor
+
+        self.image = pygame.transform.scale_by(self.original_image, resize_factor)
+
+        self.checkpoints = []
+        for i in config.Level_preset[self.level]["checkpoints"]:
+            self.checkpoints.append((i[0] * resize_factor, i[1] * resize_factor))
+
+        self.distance_per_frame = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["distance_per_second"] / fps * resize_factor
+
+        self.location = Vector2(self.location[0] / self.old_resize_factor * resize_factor , self.location[1] / self.old_resize_factor * resize_factor)
+        self.rect = self.image.get_rect()
+        self.rect.center = self.location
+
+        self.old_resize_factor = resize_factor
+
+        global enemy_health_font
+        enemy_health_font = pygame.font.SysFont(config.Initialise["enemy_health_font"][0], round(config.Initialise["enemy_health_font"][1] * resize_factor), config.Initialise["enemy_health_font"][2], config.Initialise["enemy_health_font"][3])
+
 
 
 class Ant_g(Enemy):
@@ -136,10 +164,11 @@ class Ant_g(Enemy):
         Enemy.__init__(self, "ant_g", level, spawn_time)
         self.randint: int = random.randint(-100,100)
 
+        ## means dont in resize function
         # get the width needed to center this message, allow functions in this class to accesss the width 
-        health_message_align = enemy_health_font.render(str(self.randint), True, (255, 255, 0))
-        # +9 in consideration of the length of the "<" symbol
-        self.message_width_half: float = health_message_align.get_rect()[2] + 9
+        ##health_message_align = enemy_health_font.render(str(self.randint), True, (255, 255, 0))
+        # +13 in consideration of the length of the "<" symbol
+        ##self.message_width_half: float = health_message_align.get_rect()[2] + 13
 
     # show a health and the number that it needs to be greater than
     def show_health(self, health: int, location: Vector2):
@@ -174,22 +203,23 @@ class Ant_g(Enemy):
 
         # get the width needed to center this message, allow functions in this class to accesss the width 
         health_message_align = enemy_health_font.render(str(self.randint), True, (255, 255, 0))
-        # +9 in consideration of the length of the "<" symbol
-        self.message_width_half: float = health_message_align.get_rect()[2] + 9
+        # +13 in consideration of the length of the "<" symbol
+        self.message_width_half: float = health_message_align.get_rect()[2] + 13 * resize_factor
 
 
 class Ant_s(Enemy):
     # smaller than
     def __init__(self, level, spawn_time):
         Enemy.__init__(self, "ant_s", level, spawn_time)
-        self.randint: int = random.randint(200,100)
+        self.randint: int = random.randint(100,200)
         self.appearent_health: int = self.randint - self.health 
 
+        ## means that they are defined in the resize function
         # get the width needed to center this message, allow functions in this class to accesss the width 
         health_message_align: str = f"{self.randint} "
-        health_message_align = enemy_health_font.render(health_message_align, True, (255, 255, 0))
-        # +9 in consideration of the length of the ">" symbol
-        self.message_width_half: float = health_message_align.get_rect()[2] + 9
+        ##health_message_align = enemy_health_font.render(health_message_align, True, (255, 255, 0))
+        # +13 in consideration of the length of the ">" symbol
+        ##self.message_width_half: float = health_message_align.get_rect()[2] + 13
 
     # show a health and the number that it needs to be greater than
     def show_health(self, health: int, location: Vector2):
@@ -224,5 +254,5 @@ class Ant_s(Enemy):
         
         # get the width needed to center this message, allow functions in this class to accesss the width 
         health_message_align = enemy_health_font.render(str(self.randint), True, (255, 255, 0))
-        # +9 in consideration of the length of the ">" symbol
-        self.message_width_half: float = health_message_align.get_rect()[2] + 9
+        # +13 in consideration of the length of the ">" symbol
+        self.message_width_half: float = health_message_align.get_rect()[2] + 13 * resize_factor

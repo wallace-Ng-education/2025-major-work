@@ -24,5 +24,7 @@ Ingame_data = {
         "Shop_item_list" : Shop_item_list,
         # resize factor of 1 means no change in sie
         "resize_factor": 1,
-        "buttons": []
+        "buttons": [],
+        "held_item": None,
+        "tower_placed": 0,
 }
