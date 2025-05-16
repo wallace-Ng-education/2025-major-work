@@ -139,13 +139,14 @@ def path_point_distance_check(level: str, location: Vector2, min_distance: float
             projection_from_i = pygame.Vector2.dot(path_normalized, i - location) * path_normalized
             projection_from_old_point = pygame.Vector2.dot(path_normalized, old_point - location) * path_normalized
             
-            # The dot product of two vectors that are parallel but in opposite directions is negative
-            # prevents checking for locations beyond the path segment
-            # revise vectors if you don't understand
+            """
+             The dot product of two vectors that are parallel but in opposite directions is negative
+             prevents checking for locations beyond the path segment           
+            """
+
             if pygame.Vector2.dot(projection_from_i, projection_from_old_point) < 0:
                 location_to_vector = projection_from_i - i + location
                 magnitude = pygame.Vector2.magnitude(location_to_vector)
-                #print(magnitude)
                 
                 if magnitude < min_distance:
                     return False
@@ -156,6 +157,7 @@ def path_point_distance_check(level: str, location: Vector2, min_distance: float
 
         # set up i as old_point to be used by next i
         old_point = i
+        #print(old_point)
         #print("")
     
     # if did not return False
