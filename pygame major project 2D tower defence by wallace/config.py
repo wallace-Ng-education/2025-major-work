@@ -33,18 +33,11 @@ Initialise = {
 
 Level_preset = {
     # home screen
-    "home": { # rect[85 + 285k, 70 + 235m, 200, 200 ]  -- > k and m are integers 
+    "home": { # button_data with rectangles of [85 + 285k, 70 + 235m, 200, 200 ]  -- > k and m are integers 
               # k represents the column number, m the row number
-        "rect":{
-            "tutorial": {
-                "cords": [85, 70, 200, 200],
-                "color": (0, 255, 0),
-                },
-            "level1": {
-                "cords": [370, 70, 200, 200],
-                "color": (0, 0, 0),
-                },
-        },
+        # tutorial, level1, level2,/n level3, level4, level5
+        "button_data": [[Initialise["queryIMG"],[85,70]],[Initialise["queryIMG"],[375,70]], [Initialise["queryIMG"],[655,70]], 
+                        [Initialise["queryIMG"],[85,305]],[Initialise["queryIMG"],[375,305]], [Initialise["queryIMG"],[655,305]]],
     },
 
     # 1
@@ -80,24 +73,10 @@ Level_preset = {
         "checkpoints": [(0, 1), (260, 180), (120, 300), (300, 400), (530, 230), (710, 350), (570, 470), (700, 570)],
         "player_health": 100,
         "player_currency": 500,
-        "rect":{
-            "UI": {
-                "cords": [735, 0 , 200, 540],
-                "color": None,
-                },
-            "battlefield": {
-                "cords": [0, 0 , 735, 540],
-                "color": None,
-                },
-            "home": {
-                "cords": [890, 0, 50, 50],
-                "color": (0, 255, 255),
-                },
-            "pause": {
-                "cords": [840, 0, 50, 50],
-                "color": (0, 255, 0),
-                },
-            },
+        # pause, home
+        "button_data": [[Initialise["queryIMG"],[840,0]],[Initialise["queryIMG"],[890,0]]],
+        # UI, battlefield
+        "rect_data":[[735, 0 , 200, 540],[0, 0 , 735, 540]],
         # for every shop item [tower_image, name: str, description: str, price: int, unlocked:bool, price:int]
         "shop_data": [["Linear tower", True], ["Parabola tower", True]]
         },

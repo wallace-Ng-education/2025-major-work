@@ -1,1 +1,1 @@
-                            if pause_button_rect[0] <= mouse[0] <= (pause_button_rect[0] + pause_button_rect[2]) and pause_button_rect[1] <= mouse[1] <= (pause_button_rect[1] + pause_button_rect[3]):
+[Initialise.queryIMG,[85,305]],[Initialise.queryIMG,[375,305]], [Initialise.queryIMG,[655,305]]

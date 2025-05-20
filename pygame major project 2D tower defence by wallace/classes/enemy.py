@@ -103,9 +103,10 @@ class Enemy(pygame.sprite.Sprite):
     def resize(self, resize_factor: float):
         self.image = pygame.transform.scale_by(self.original_image, resize_factor)
 
-        self.checkpoints = []
-        for i in config.Level_preset[self.level]["checkpoints"]:
-            self.checkpoints.append((i[0] * resize_factor, i[1] * resize_factor))
+        self.chekcpoints = ingame_level_data.Ingame_data["checkpoints"]
+      #  self.checkpoints = []
+       # for i in config.Level_preset[self.level]["checkpoints"]:
+        #    self.checkpoints.append((i[0] * resize_factor, i[1] * resize_factor))
 
         self.distance_per_frame = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["distance_per_second"] / fps * resize_factor
 

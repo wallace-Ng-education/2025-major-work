@@ -9,7 +9,7 @@ queryIMG = config.Initialise["queryIMG"]
 
 
 # use the defined sprite class for its functions
-class Shop_item():
+class Button():
     def __init__(self, position_in_list : int, level: int):
 
         # get defined data from input
@@ -20,7 +20,48 @@ class Shop_item():
 
         # get the data according to the position
         ##################################################################################
+        self.original_image = config.Level_preset[self.level]["button_data"][self.position_in_list][0]
+
+    def draw(self):
+        screen.blit(self.image, (self.x, self.y))
+
+    def resize(self, resize_factor):
+        self.image = pygame.transform.scale_by(self.original_image, resize_factor * 0.6)
+        self.rect = self.image.get_rect()
+        self.x = config.Level_preset[self.level]["button_data"][self.position_in_list][1][0] * resize_factor
+        self.y = config.Level_preset[self.level]["button_data"][self.position_in_list][1][1] * resize_factor
+
+    def check_press(self, mouse_pos):
+        # check if pressed on this item
+        if self.x <= mouse_pos[0] <= (self.x + self.rect[2]) and self.y <= mouse_pos[1] <= (self.y + self.rect[3]):
+            return True
+        else: return False
+
+# button without the image
+class Rect(Button):
+    def __init__(self, position_in_list : int, level: int):
+        self.fetch_from = "rect_data"
+        Button.__init__(self, position_in_list, level)
+        self.original_rect = config.Level_preset[self.level]["rect_data"][self.position_in_list]
+
+    def resize(self, resize_factor):
+        self.rect = [i * resize_factor for i in self.original_rect]
+        self.x = self.rect[0]
+        self.y = self.rect[1]
+
+    def draw(self):
+        None
+
+
+# button but with more capabilities
+class Shop_item(Button):
+    def __init__(self, position_in_list : int, level: int):
+        Button.__init__(self, position_in_list, level)
+
+        # get the data according to the position
+        ##################################################################################
         self.name: str = config.Level_preset[self.level]["shop_data"][self.position_in_list][0]
+        # unlock is not a must have feature, might not be implemented
         self.unlocked = config.Level_preset[self.level]["shop_data"][self.position_in_list][1]
 
         self.dps = config.Tower_preset[self.name]["dps"]
