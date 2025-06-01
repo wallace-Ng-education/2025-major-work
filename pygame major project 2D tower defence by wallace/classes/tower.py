@@ -11,7 +11,7 @@ screen = config.Initialise["screen"]
 tower_linearIMG = config.Initialise["tower_linearIMG"]
 tower_parabolaIMG = config.Initialise["tower_parabolaIMG"]
 fps = config.Initialise["fps"]
-player_health_font = pygame.font.SysFont(config.Initialise["player_health_font"][0], config.Initialise["player_health_font"][1], config.Initialise["player_health_font"][2], config.Initialise["player_health_font"][3])
+player_font = pygame.font.SysFont(config.Initialise["player_font"][0], config.Initialise["player_font"][1], config.Initialise["player_font"][2], config.Initialise["player_font"][3])
 
 # get attacks from attack
 Linear_attack = classes.attack.Linear_attack
@@ -80,8 +80,8 @@ class Tower(pygame.sprite.Sprite):
         pass
 
     def resize(self, resize_factor: float):
-        global player_health_font
-        player_health_font = pygame.font.SysFont(config.Initialise["player_health_font"][0], round(config.Initialise["player_health_font"][1] * resize_factor), config.Initialise["player_health_font"][2], config.Initialise["player_health_font"][3])
+        global player_font
+        player_font = pygame.font.SysFont(config.Initialise["player_font"][0], round(config.Initialise["player_font"][1] * resize_factor), config.Initialise["player_font"][2], config.Initialise["player_font"][3])
 
         self.image = pygame.transform.scale_by(tower_linearIMG, resize_factor)
         self.location = (self.original_location[0] * resize_factor , self.original_location[1] * resize_factor)
@@ -169,8 +169,8 @@ class Parabola(Tower):
         if (self.x - self.rect[2] / 2) <= mouse_pos[0] <= (self.x + self.rect[2] / 2) and (self.y - self.rect[3] / 2) <= mouse_pos[1] <= (self.y + self.rect[3] / 2):
             pygame.draw.rect(screen, (0, 0, 0), [i * ingame_level_data.Ingame_data["resize_factor"] for i in [735, 50, 205, 540]])
             # instructions
-            click_message1 = player_health_font.render("Click on the direction ", True, (255, 255, 255))
-            click_message2 = player_health_font.render("the tower should face! ", True, (255, 255, 255))
+            click_message1 = player_font.render("Click on the direction ", True, (255, 255, 255))
+            click_message2 = player_font.render("the tower should face! ", True, (255, 255, 255))
             screen.blit(click_message1, [i * ingame_level_data.Ingame_data["resize_factor"] for i in [735, 50]])
             screen.blit(click_message2, [i * ingame_level_data.Ingame_data["resize_factor"] for i in [735, 75]])
             pygame.draw.circle(screen, (255, 255, 255), self.location, self.range, width=1)
@@ -190,8 +190,8 @@ class Parabola(Tower):
         else: return False
 
     def resize(self, resize_factor: float):
-        global player_health_font
-        player_health_font = pygame.font.SysFont(config.Initialise["player_health_font"][0], round(config.Initialise["player_health_font"][1] * resize_factor), config.Initialise["player_health_font"][2], config.Initialise["player_health_font"][3])
+        global player_font
+        player_font = pygame.font.SysFont(config.Initialise["player_font"][0], round(config.Initialise["player_font"][1] * resize_factor), config.Initialise["player_font"][2], config.Initialise["player_font"][3])
 
         self.image = pygame.transform.scale_by(tower_parabolaIMG, resize_factor)
         self.location = (self.original_location[0] * resize_factor , self.original_location[1] * resize_factor)

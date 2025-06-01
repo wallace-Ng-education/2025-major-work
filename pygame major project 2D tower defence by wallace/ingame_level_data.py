@@ -14,6 +14,7 @@ Tower_list = pygame.sprite.Group()
 Shop_item_list: list = []
 Button_list: list = []
 Rect_list: list = []
+Dialogue_list: list = []
 
 Ingame_data = {
         "current_player_health": None,
@@ -26,9 +27,11 @@ Ingame_data = {
         "Shop_item_list" : Shop_item_list,
         "Button_list": Button_list,
         "Rect_list": Rect_list,
+        "Dialogue_list": Dialogue_list,
         # resize factor of 1 means no change in sie
         "resize_factor": 1,
         "held_item": None,
         "tower_placed": 0,
         "checkpoints": [],
+        "enemy_count": 0,
 }

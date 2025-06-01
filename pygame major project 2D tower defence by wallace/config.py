@@ -2,6 +2,7 @@ import pygame
 pygame.init()
 
 
+# store data used in all files
 Initialise = {
     # screen, icon and title
     "screen_size" : (940, 540),
@@ -19,13 +20,15 @@ Initialise = {
     "tower_linearIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/tower_linearIMG.png').convert_alpha(), 0.8),
     "tower_parabolaIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/tower_parabolaIMG.png').convert_alpha(), 0.8),
     "queryIMG" : pygame.image.load('pygame major project 2D tower defence by wallace/assets/query.png').convert_alpha(),
-    
+    "button_pauseIMG": pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_pauseIMG.png').convert_alpha(),
+    "button_homeIMG": pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_homeIMG.png').convert_alpha(),
+    "Dialogue_badend": pygame.image.load('pygame major project 2D tower defence by wallace/assets/Dialogue_badend.png').convert_alpha(),
+    "Dialogue_happyend": pygame.image.load('pygame major project 2D tower defence by wallace/assets/Dialogue_happyend.png').convert_alpha(),
 
     # text font initialise
     # consider importing settings to a list that fit into pygame.font.SysFont() -> usually [text family: str, size: int, blod: bool, i]
     "enemy_health_font" : ["cambria", 25, False, False],
-    "player_health_font" : ["cambria", 20, True, False],
-    "player_currency_font" : ["cambria", 20, True, False],
+    "player_font" : ["cambria", 20, True, False],
 
     # frames per second
     "fps" : 30
@@ -35,13 +38,59 @@ Level_preset = {
     # home screen
     "home": { # button_data with rectangles of [85 + 285k, 70 + 235m, 200, 200 ]  -- > k and m are integers 
               # k represents the column number, m the row number
-        # tutorial, level1, level2,/n level3, level4, level5
-        "button_data": [[Initialise["queryIMG"],[85,70]],[Initialise["queryIMG"],[375,70]], [Initialise["queryIMG"],[655,70]], 
-                        [Initialise["queryIMG"],[85,305]],[Initialise["queryIMG"],[375,305]], [Initialise["queryIMG"],[655,305]]],
+        # button to: tutorial, level1, level2,/n level3, level4, level5
+        "button_data" : [
+            [pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_tutorialIMG.png').convert_alpha(), [85, 70]],
+            [pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_lv1IMG.png').convert_alpha(), [375, 70]],
+            [pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_lv2IMG.png').convert_alpha(), [655, 70]],
+            [pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_lv3IMG.png').convert_alpha(), [85, 305]],
+            [pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_lv4IMG.png').convert_alpha(), [375, 305]],
+            [pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_lv5IMG.png').convert_alpha(), [655, 305]],
+        ],
     },
 
     # 1
     "level1": {
+        "enemy_data": {
+            "snake": {
+                "health": 150,
+                # distance in pixels
+                "distance_per_second": 100,
+                "image": Initialise["enemy_snakeIMG"],
+                "spawn_time": [
+                                # Group 1 (center 5, 3 numbers)
+                                1.00, 1.85, 4.45,
+                                
+                                # Group 2 (center 10, 6 numbers)
+                                8.25, 8.55, 9.85, 10.15, 10.45, 12.75,
+                                
+                                # Group 3 (center 15, 8 numbers)
+                                13.95, 14.25, 14.55, 15.85, 16.15, 16.45, 17.75, 18.05,
+                                
+                                # Group 4 (center 20, 13 numbers)
+                                19.65, 19.95, 20.00, 20.55, 20.85, 21.00, 21.15, 22.45, 23.75, 24.05, 25.35, 26.65, 27.95
+                                ],
+                "bounty": 20
+            },
+        },
+        # (0,0) is not a valid checkpoint
+        "checkpoints": [(0, 1), (260, 180), (120, 300), (300, 400), (530, 230), (710, 350), (570, 470), (700, 570)],
+        "player_health": 100,
+        "player_currency": 100,
+        # pause, home
+        "button_data": [[Initialise["button_pauseIMG"],[840,0]],[Initialise["button_homeIMG"],[890,0]]],
+        # badend, happyend
+        "dialogue_data": [[Initialise["Dialogue_badend"],[90,55]],[Initialise["Dialogue_happyend"],[90,55]]],
+        # UI, battlefield
+        "rect_data":[[735, 0 , 200, 540],[0, 0 , 735, 540]],
+        # for every shop item [tower_image, name: str, description: str, price: int, unlocked:bool, price:int]
+        "shop_data": [["Linear tower", True]],
+        "enemy_count": 30,
+        "background": pygame.image.load('pygame major project 2D tower defence by wallace/assets/Lv1IMG.png'),
+        },
+
+    # 4
+    "level4": {
         "enemy_data": {
             "snake": {
                 "health": 200,
@@ -49,40 +98,40 @@ Level_preset = {
                 "distance_per_second": 100,
                 "image": Initialise["enemy_snakeIMG"],
                 "spawn_time": (tuple([x for x in range(10, 10000)])),
-                "bounty": 30
+                "bounty": 20
             },
             "ant_g": {
                 "health": 100,
                 # distance in pixels
-                "distance_per_second": 100,
+                "distance_per_second": 200,
                 "image": Initialise["enemy_ant_gIMG"],
                 "spawn_time": {1, 2,3,4,5}, # (tuple([x/100 for x in range(1000)])),
-                "bounty": 15
+                "bounty": 10
             },
             "ant_s": {
-                "health": 100,
+                "health": 200,
                 # distance in pixels
                 "distance_per_second": 100,
                 "image": Initialise["enemy_ant_sIMG"],
                 "spawn_time": {7,8,9,20}, # (tuple([x/100 for x in range(1000)])),
-                "bounty": 15
+                "bounty": 10
             }
         },
-        "background_image": pygame.image.load('pygame major project 2D tower defence by wallace/assets/level1_background.png'),
         # (0,0) is not a valid checkpoint
         "checkpoints": [(0, 1), (260, 180), (120, 300), (300, 400), (530, 230), (710, 350), (570, 470), (700, 570)],
         "player_health": 100,
-        "player_currency": 500,
+        "player_currency": 100,
         # pause, home
-        "button_data": [[Initialise["queryIMG"],[840,0]],[Initialise["queryIMG"],[890,0]]],
+        "button_data": [[Initialise["button_pauseIMG"],[840,0]],[Initialise["button_homeIMG"],[890,0]]],
+        # badend, happyend
+        "dialogue_data": [[Initialise["Dialogue_badend"],[90,55]],[Initialise["Dialogue_happyend"],[90,55]]],
         # UI, battlefield
         "rect_data":[[735, 0 , 200, 540],[0, 0 , 735, 540]],
         # for every shop item [tower_image, name: str, description: str, price: int, unlocked:bool, price:int]
-        "shop_data": [["Linear tower", True], ["Parabola tower", True]]
+        "shop_data": [["Linear tower", True], ["Parabola tower", True]],
+        "enemy_count": 60,
+        "background": pygame.image.load('pygame major project 2D tower defence by wallace/assets/Lv4IMG.png'),
         },
-
-    # 2
-    "level2": {}
 }
 
 Tower_preset = {
@@ -90,7 +139,7 @@ Tower_preset = {
         "dps": 30,
         "description" : "penetrative!",
         "details" : ["This tower shoots a straight line nothing can stop, dealing damage to enemies on", "its path. This is also how linear graphs looks like - also a straight line, extending to", "infinity. The equation would be y = Ax or Ay = x"],
-        "price": 50,
+        "price": 100,
         "image" : Initialise["tower_linearIMG"],
         "range" : 200,
     },
@@ -98,7 +147,7 @@ Tower_preset = {
         "dps": 10,
         "description" : "Knocks back!",
         "details" : ["This tower shoots a growing curve knocking back enemies. This is also how parabola", " graphs looks like - also a curve curving at a linear rate. The equation would be y = Ax^2", " or Ay^2 = x, where ^2 means to the power of two. Be aware that you will only learn", " about parabolas facing verticly and horizontally in high school."],
-        "price" : 100,
+        "price" : 50,
         "image" : Initialise["tower_parabolaIMG"],
         "range" : 230,
     }

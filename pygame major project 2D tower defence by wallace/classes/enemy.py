@@ -158,7 +158,6 @@ class Snake(Enemy):
         enemy_health_font = pygame.font.SysFont(config.Initialise["enemy_health_font"][0], round(config.Initialise["enemy_health_font"][1] * resize_factor), config.Initialise["enemy_health_font"][2], config.Initialise["enemy_health_font"][3])
 
 
-
 class Ant_g(Enemy):
     # greater than
     def __init__(self, level, spawn_time):

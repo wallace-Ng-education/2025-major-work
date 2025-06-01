@@ -11,25 +11,30 @@ queryIMG = config.Initialise["queryIMG"]
 # use the defined sprite class for its functions
 class Button():
     def __init__(self, position_in_list : int, level: int):
-
         # get defined data from input
         ##################################################################################
         self.position_in_list = position_in_list # position in the preset list, starting from 0
         # in format of "levelx" , x is an integer
         self.level = level
+        self.storage = "button_data"
 
         # get the data according to the position
         ##################################################################################
-        self.original_image = config.Level_preset[self.level]["button_data"][self.position_in_list][0]
+        self.original_image = config.Level_preset[self.level][self.storage][self.position_in_list][0]
+        self.resize(ingame_level_data.Ingame_data["resize_factor"])
+
+    def __repr__(self):
+        return f"{self.x, self.y, self.rect[2], self.rect[3]}"
 
     def draw(self):
         screen.blit(self.image, (self.x, self.y))
 
-    def resize(self, resize_factor):
-        self.image = pygame.transform.scale_by(self.original_image, resize_factor * 0.6)
+    def resize(self, resize_factor: float):
+        self.image = pygame.transform.scale_by(self.original_image, resize_factor)
         self.rect = self.image.get_rect()
-        self.x = config.Level_preset[self.level]["button_data"][self.position_in_list][1][0] * resize_factor
-        self.y = config.Level_preset[self.level]["button_data"][self.position_in_list][1][1] * resize_factor
+        self.x = config.Level_preset[self.level][self.storage][self.position_in_list][1][0] * resize_factor
+        self.y = config.Level_preset[self.level][self.storage][self.position_in_list][1][1] * resize_factor
+
 
     def check_press(self, mouse_pos):
         # check if pressed on this item
@@ -37,12 +42,35 @@ class Button():
             return True
         else: return False
 
-# button without the image
-class Rect(Button):
+
+# button that is not drawn every tick, stored in another list
+class Dialogue(Button):
     def __init__(self, position_in_list : int, level: int):
-        self.fetch_from = "rect_data"
-        Button.__init__(self, position_in_list, level)
+        super().__init__(position_in_list, level)
+        # get defined data from input
+        ##################################################################################
+        self.position_in_list = position_in_list # position in the preset list, starting from 0
+        # in format of "levelx" , x is an integer
+        self.level = level
+        self.storage = "dialogue_data"
+
+        # get the data according to the position
+        ##################################################################################
+        self.original_image = config.Level_preset[self.level][self.storage][self.position_in_list][0]
+        self.resize(ingame_level_data.Ingame_data["resize_factor"])
+
+
+# button without the image
+class Rect():
+    def __init__(self, position_in_list : int, level: int):
+        # get defined data from input
+        ##################################################################################
+        self.position_in_list = position_in_list # position in the preset list, starting from 0
+        # in format of "levelx" , x is an integer
+        self.level = level
+
         self.original_rect = config.Level_preset[self.level]["rect_data"][self.position_in_list]
+        self.resize(ingame_level_data.Ingame_data["resize_factor"])
 
     def resize(self, resize_factor):
         self.rect = [i * resize_factor for i in self.original_rect]
@@ -50,14 +78,27 @@ class Rect(Button):
         self.y = self.rect[1]
 
     def draw(self):
-        None
+        pass
+    
+    def __repr__(self):
+        return f"{self.x, self.y, self.rect[2], self.rect[3]}"
+
+    def check_press(self, mouse_pos):
+        # check if pressed on this item
+        if self.x <= mouse_pos[0] <= (self.x + self.rect[2]) and self.y <= mouse_pos[1] <= (self.y + self.rect[3]):
+            return True
+        else: return False
 
 
 # button but with more capabilities
-class Shop_item(Button):
+class Shop_item():
     def __init__(self, position_in_list : int, level: int):
-        Button.__init__(self, position_in_list, level)
-
+        # get defined data from input
+        ##################################################################################
+        self.position_in_list = position_in_list # position in the preset list, starting from 0
+        # in format of "levelx" , x is an integer
+        self.level = level
+        
         # get the data according to the position
         ##################################################################################
         self.name: str = config.Level_preset[self.level]["shop_data"][self.position_in_list][0]
@@ -69,36 +110,7 @@ class Shop_item(Button):
         self.details = config.Tower_preset[self.name]["details"]
         self.price = config.Tower_preset[self.name]["price"]
         self.original_towerIMG = config.Tower_preset[self.name]["image"]
-
-        # set common data for all shop items
-        ##################################################################################
-        # initially starts as top of the shop colum, y axis increases as number of shop items increase
-        # all ## are done in the resize part, not need in initial
-        ## self.rect = (740, 60 + 80 * self.position_in_list, 195, 70)
-        ##self.x = self.rect[0]
-        ##self.y = self.rect[1]
-
-        # inner rect
-        ## self.inner_rect = (self.rect[0] + 5, self.rect[1] + 5, self.rect[2] - 10, self.rect[3] - 10)
-
-        # shop item image
-        ## self.towerIMG_x = self.x + 10
-        ## self.towerIMG_y = self.y + 10
-
-        # name
-        ## self.name_x = self.x + 50
-        ## self.name_y = self.towerIMG_y
-        ## self.show_name = self.big_font.render(self.name , True, (255, 255, 255))
-
-        # description
-        ## self.description_x = self.towerIMG_x
-        ## self.description_y = self.y + 50
-        ## self.show_description = self.small_font.render(self.description , True, (255, 255, 255))
-
-        ## self.price_x = self.x + 100
-        ## self.price_y = self.y + 40
-        ## self.show_price = self.big_font.render(str(self.price) , True, (255, 255, 0))
-
+        self.resize(ingame_level_data.Ingame_data["resize_factor"])
 
     def draw(self):
         pygame.draw.rect(screen, (102, 51, 0), pygame.Rect(self.rect))
@@ -109,11 +121,14 @@ class Shop_item(Button):
         screen.blit(self.show_price, (self.price_x, self.price_y))
         screen.blit(self.queryIMG, (self.queryIMG_x , self.queryIMG_y))
 
+    def __repr__(self):
+        return f"{self.x, self.y}"
+
     def resize(self, resize_factor):
         self.towerIMG = pygame.transform.scale_by(self.original_towerIMG, resize_factor * 0.6)
         self.queryIMG = pygame.transform.scale_by(queryIMG, resize_factor)
 
-        self.rect = (740 * resize_factor, float(60 + 80 * self.position_in_list) * resize_factor, 195 * resize_factor, 70 * resize_factor)
+        self.rect = (740 * resize_factor, float(80 + 80 * self.position_in_list) * resize_factor, 195 * resize_factor, 70 * resize_factor)
         self.x = self.rect[0]
         self.y = self.rect[1]
 
@@ -128,9 +143,9 @@ class Shop_item(Button):
         self.queryIMG_height = 16 * resize_factor
 
         # texts
-        self.extreme_font = pygame.font.SysFont(config.Initialise["player_currency_font"][0], round(config.Initialise["player_currency_font"][1] * resize_factor * 3), config.Initialise["player_currency_font"][2], config.Initialise["player_currency_font"][3])
-        self.big_font = pygame.font.SysFont(config.Initialise["player_currency_font"][0], round(config.Initialise["player_currency_font"][1] * resize_factor), config.Initialise["player_currency_font"][2], config.Initialise["player_currency_font"][3])
-        self.small_font = pygame.font.SysFont(config.Initialise["player_currency_font"][0], round(config.Initialise["player_currency_font"][1] * resize_factor / 2), config.Initialise["player_currency_font"][2], config.Initialise["player_currency_font"][3])
+        self.extreme_font = pygame.font.SysFont(config.Initialise["player_font"][0], round(config.Initialise["player_font"][1] * resize_factor * 3), config.Initialise["player_font"][2], config.Initialise["player_font"][3])
+        self.big_font = pygame.font.SysFont(config.Initialise["player_font"][0], round(config.Initialise["player_font"][1] * resize_factor), config.Initialise["player_font"][2], config.Initialise["player_font"][3])
+        self.small_font = pygame.font.SysFont(config.Initialise["player_font"][0], round(config.Initialise["player_font"][1] * resize_factor / 2), config.Initialise["player_font"][2], config.Initialise["player_font"][3])
 
         self.name_x = self.x + (50 * resize_factor)
         self.name_y = self.y + (10 * resize_factor)
@@ -190,10 +205,7 @@ class Shop_item(Button):
             pygame.display.update()
 
             for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        print("quit game.")
-
-                    elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.type == pygame.MOUSEBUTTONDOWN:
                         query = False
 
     def check_press(self, mouse_pos):
