@@ -199,3 +199,4 @@ class Parabola(Tower):
         self.rect.center = self.location
         if self.original_range: self.range = self.original_range * resize_factor
         self.resize_factor = resize_factor
+        

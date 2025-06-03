@@ -67,13 +67,57 @@ def generate_enemies(level : str):
                 ingame_level_data.Ingame_data["Enemy_prep_list"].append(a)
     ingame_level_data.Ingame_data["Enemy_prep_list"].sort(key=find_spawn_time)
 
+def generate_music(level : str):
+    """
+    start music at beginning of level
+
+    Args:
+        level: A string (levelx) representing the level to get the data from, where x is an integer
+
+    Result:
+        music being played at 50% max volume
+    """
+    pygame.mixer.music.unload()
+    pygame.mixer.music.load(config.Level_preset[level]["music"])
+    pygame.mixer.music.set_volume(0.5)
+    pygame.mixer.music.play(-1, 0, 2000)
+
+def play_sound(sound: str):
+    """
+    playe sound effect
+
+    Args:
+        sound: A string corresponding to the key in the dictionary config.Initialise
+
+    Result:
+        sound effect being played, not pausing previous music
+    """
+    pygame.mixer.Sound.play(config.Initialise[sound])
+
+def play_sound_pause_music(sound: str):
+    """
+    playe sound effect and pause music
+
+    Args:
+        sound: A string corresponding to the key in the dictionary config.Initialise
+
+    Result:
+        sound effect being played, pause previous music
+    """
+    pygame.mixer.music.pause()
+    play_sound(sound)
+
 def pass_level(level: str):
     """
     end the level if player passed the level
+    Args:
+        level: A string (levelx) representing the level to get the data from, where x is an integer
+
     """
     # no more enemies to be spawned, all spawned enemies killed --> passed!
     if not ingame_level_data.Ingame_data["Enemy_prep_list"] and not ingame_level_data.Ingame_data["Enemy_list"]:
         ingame_level_data.Ingame_data["Dialogue_list"][1].draw()
+        play_sound_pause_music("happyendSOUND")
         time.sleep(0.5)
         global level_selected 
         level_selected = -1
@@ -105,6 +149,7 @@ def fail_level():
     # check if the player have any health left --> should add a death message / screen / score
     if ingame_level_data.Ingame_data["current_player_health"] <= 0:
         ingame_level_data.Ingame_data["Dialogue_list"][0].draw()
+        play_sound_pause_music("badendSOUND")
         time.sleep(0.5)
         global level_selected 
         level_selected = -1
@@ -219,12 +264,11 @@ def display_player_data():
         original_show_remaining_enemy_cords = (740, 47)
         screen.blit(show_remaining_enemy, [i * ingame_level_data.Ingame_data["resize_factor"] for i in original_show_remaining_enemy_cords])
 
-def path_point_distance_check(level: str, location: Vector2, min_distance: float):
+def path_point_distance_check(location: Vector2, min_distance: float):
     """
     Check distance between the enemy path and a point, so that the towers will not be placed on the path
 
     Args:
-        level: A string (levelx) representing the level to get the data from, where x is an integer
         location: where to place
         min_distance: how far should the tower should be from any path
     
@@ -232,6 +276,7 @@ def path_point_distance_check(level: str, location: Vector2, min_distance: float
         distance: float
     """
     old_point = None
+        #print(ingame_level_data.Ingame_data["checkpoints"]) # error testing
     min_distance *= ingame_level_data.Ingame_data["resize_factor"]
     for i in ingame_level_data.Ingame_data["checkpoints"]:
         i = Vector2(i)
@@ -239,6 +284,7 @@ def path_point_distance_check(level: str, location: Vector2, min_distance: float
         if old_point:
             # some vector manipulations to find out distance of the 
             path_normalized = pygame.Vector2.normalize(i - old_point)
+                #pygame.draw.line(screen, (0,0,233), old_point, i, 3) # error testing
             projection_from_i = pygame.Vector2.dot(path_normalized, i - location) * path_normalized
             projection_from_old_point = pygame.Vector2.dot(path_normalized, old_point - location) * path_normalized
             
@@ -296,7 +342,7 @@ def place_tower(tower_type, level, location: Vector2):
     # place tower base at where clicked
     original_location = [original_location[0], original_location[1] - 35]
 
-    if path_point_distance_check(level, location, 60):
+    if path_point_distance_check(location, 60):
         match tower_type:
             case "Linear":
                 tower = Linear(tower_type, level, original_location)
@@ -368,6 +414,60 @@ def error_message():
         else:
             error_list.remove(i)
 
+def pause_level():
+    """
+    pause the level indefinately untill the user clicks again 
+    
+    Args:
+        None
+    
+    Result:
+        music paused, pause sound palyed , game paused
+        unpause -> unpause sound played, music resumed, game resumed
+    """
+    pause = True
+    message = player_font.render("click again to resume." , True, (255, 255, 255))
+    message_rect = message.get_rect()
+    message_rect.center = (config.Initialise["screen_size"][0] / 2, config.Initialise["screen_size"][1] / 2)
+    pygame.draw.rect(screen, (0,0,0), message_rect)
+    screen.blit(message, message_rect)
+    play_sound_pause_music("pauseSOUND")
+    pygame.display.update()
+    while pause:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pause = False
+    play_sound_pause_music("unpauseSOUND")
+    pygame.mixer.music.unpause()
+
+def initialise(level):
+    """
+    initialise level
+
+    Args:
+        level: A string (levelx) representing the level to get the data from, where x is an integer
+
+    Results:
+        Button, Rect and Shop_item objects to be stored and resized in lists stored in ingame_level_data.py
+    """
+    ingame_level_data.Ingame_data["current_player_health"] = config.Level_preset[level]["player_health"]
+    ingame_level_data.Ingame_data["current_player_currency"] = config.Level_preset[level]["player_currency"]
+    generate_enemies(level)
+    generate_button(level)
+    generate_music(level)
+
+    global background
+    background = pygame.transform.scale_by(config.Level_preset[level]["background"], ingame_level_data.Ingame_data["resize_factor"])
+
+    # The enemies spawn relative to when the
+    global time_level_init
+    time_level_init = pygame.time.get_ticks()/1000
+
+    ingame_level_data.Ingame_data["held_item"] = None
+    for c in config.Level_preset["level1"]["checkpoints"]:
+        ingame_level_data.Ingame_data["checkpoints"].append((c[0] * ingame_level_data.Ingame_data["resize_factor"], c[1] * ingame_level_data.Ingame_data["resize_factor"]))
+    ingame_level_data.Ingame_data["enemy_count"] = config.Level_preset[level]["enemy_count"]
+
 
 # Game loop
 running = True
@@ -388,8 +488,8 @@ while running:
         case -1:
             # set the buttons
             generate_button("home")
-            player_font = player_font = pygame.font.SysFont(config.Initialise["player_font"][0], round(config.Initialise["player_font"][1]  * ingame_level_data.Ingame_data["resize_factor"]), config.Initialise["player_font"][2], config.Initialise["player_font"][3])
-            player_font = pygame.font.SysFont(config.Initialise["player_font"][0], round(config.Initialise["player_font"][1] * ingame_level_data.Ingame_data["resize_factor"]), config.Initialise["player_font"][2], config.Initialise["player_font"][3])
+            generate_music("home")
+            player_font = pygame.font.SysFont(config.Initialise["player_font"][0], round(config.Initialise["player_font"][1]  * ingame_level_data.Ingame_data["resize_factor"]), config.Initialise["player_font"][2], config.Initialise["player_font"][3])
 
             while level_selected == -1:
                 screen.fill((232, 185, 77))
@@ -413,7 +513,6 @@ while running:
                     elif event.type == pygame.VIDEORESIZE:
                         resize_factor_get()
                         generate_button("home")
-                        player_font = player_font = pygame.font.SysFont(config.Initialise["player_font"][0], round(config.Initialise["player_font"][1]  * ingame_level_data.Ingame_data["resize_factor"]), config.Initialise["player_font"][2], config.Initialise["player_font"][3])
                         player_font = pygame.font.SysFont(config.Initialise["player_font"][0], round(config.Initialise["player_font"][1] * ingame_level_data.Ingame_data["resize_factor"]), config.Initialise["player_font"][2], config.Initialise["player_font"][3])
 
                 if len(ingame_level_data.Ingame_data["Button_list"]) > 0:
@@ -426,20 +525,7 @@ while running:
                 clock.tick(fps)
 
         case 1:
-            # Initialise level 1
-            ingame_level_data.Ingame_data["current_player_health"] = config.Level_preset["level1"]["player_health"]
-            ingame_level_data.Ingame_data["current_player_currency"] = config.Level_preset["level1"]["player_currency"]
-            generate_enemies("level1")
-            generate_button("level1")
-
-            background = pygame.transform.scale_by(config.Level_preset["level1"]["background"], ingame_level_data.Ingame_data["resize_factor"])
-
-            # The enemies spawn relative to when the
-            time_level_init = pygame.time.get_ticks()/1000
-
-            ingame_level_data.Ingame_data["held_item"] = None
-            ingame_level_data.Ingame_data["checkpoints"] = config.Level_preset["level1"]["checkpoints"]
-            ingame_level_data.Ingame_data["enemy_count"] = config.Level_preset["level1"]["enemy_count"]
+            initialise("level1")
 
 
             # start loop for level 1
@@ -493,17 +579,9 @@ while running:
                         if ingame_level_data.Ingame_data["Rect_list"][0].check_press(mouse):
 
                             if ingame_level_data.Ingame_data["Button_list"][0].check_press(mouse): # pressed on pause button
-                                pause = True
-                                message = player_font.render("click again to resume." , True, (255, 255, 255))
-                                message_rect = message.get_rect()
-                                message_rect.center = (config.Initialise["screen_size"][0] / 2, config.Initialise["screen_size"][1] / 2)
-                                screen.blit(message, message_rect)
-                                pygame.display.update()
-                                while pause:
-                                    for event in pygame.event.get():
-                                        if event.type == pygame.MOUSEBUTTONDOWN:
-                                            pause = False
+                                pause_level()
                                 break
+                                
 
                             elif ingame_level_data.Ingame_data["Button_list"][1].check_press(mouse): # pressed on home button
                                 level_selected = -1
@@ -511,6 +589,7 @@ while running:
                                 ingame_level_data.Ingame_data["Enemy_list"].empty()
                                 ingame_level_data.Ingame_data["Enemy_prep_list"] = []
                                 ingame_level_data.Ingame_data["Tower_list"].empty()
+                                play_sound_pause_music("homeSOUND")
                                 break
 
 

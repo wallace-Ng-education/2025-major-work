@@ -1,5 +1,7 @@
 import pygame
 pygame.init()
+pygame.mixer.init()
+pygame.mixer.fadeout(1)
 
 
 # store data used in all files
@@ -30,6 +32,14 @@ Initialise = {
     "enemy_health_font" : ["cambria", 25, False, False],
     "player_font" : ["cambria", 20, True, False],
 
+    # audio initialise
+    "badendSOUND": pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/badendSOUND.mp3"),
+    "happyendSOUND": pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/happyendSOUND.mp3"),
+    "pauseSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/pauseSOUND.mp3"),
+    "unpauseSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/unpauseSOUND.mp3"),
+    "homeSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/homeSOUND.mp3"),
+
+
     # frames per second
     "fps" : 30
 }
@@ -47,6 +57,7 @@ Level_preset = {
             [pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_lv4IMG.png').convert_alpha(), [375, 305]],
             [pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_lv5IMG.png').convert_alpha(), [655, 305]],
         ],
+        "music": "pygame major project 2D tower defence by wallace/audio/HomeMUSIC.mp3",
     },
 
     # 1
@@ -76,7 +87,7 @@ Level_preset = {
         # (0,0) is not a valid checkpoint
         "checkpoints": [(0, 1), (260, 180), (120, 300), (300, 400), (530, 230), (710, 350), (570, 470), (700, 570)],
         "player_health": 100,
-        "player_currency": 100,
+        "player_currency": 10000,
         # pause, home
         "button_data": [[Initialise["button_pauseIMG"],[840,0]],[Initialise["button_homeIMG"],[890,0]]],
         # badend, happyend
@@ -87,6 +98,7 @@ Level_preset = {
         "shop_data": [["Linear tower", True]],
         "enemy_count": 30,
         "background": pygame.image.load('pygame major project 2D tower defence by wallace/assets/Lv1IMG.png'),
+        "music": "pygame major project 2D tower defence by wallace/audio/Lv1MUSIC.mp3"
         },
 
     # 4
@@ -131,6 +143,7 @@ Level_preset = {
         "shop_data": [["Linear tower", True], ["Parabola tower", True]],
         "enemy_count": 60,
         "background": pygame.image.load('pygame major project 2D tower defence by wallace/assets/Lv4IMG.png'),
+        "music": "pygame major project 2D tower defence by wallace/audio/Lv4MUSIC.mp3",
         },
 }
 

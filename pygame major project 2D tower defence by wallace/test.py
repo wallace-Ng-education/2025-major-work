@@ -1,8 +1,17 @@
-        "level_backgrounds": {
-            "tutorial": pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_tutorialIMG.png'),
-            1: pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_lv1IMG.png'),
-            2: pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_lv2IMG.png'),
-            3: pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_lv3IMG.png'),
-            4: pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_lv4IMG.png'),
-            5: pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_lv5IMG.png'),
-        },
+            # Initialise level 1
+            ingame_level_data.Ingame_data["current_player_health"] = config.Level_preset[level]["player_health"]
+            ingame_level_data.Ingame_data["current_player_currency"] = config.Level_preset[level]["player_currency"]
+            generate_enemies(level)
+            generate_button(level)
+            generate_music(level)
+
+            global background
+            background = pygame.transform.scale_by(config.Level_preset[level]["background"], ingame_level_data.Ingame_data["resize_factor"])
+
+            # The enemies spawn relative to when the
+            global time_level_init
+            time_level_init = pygame.time.get_ticks()/1000
+
+            ingame_level_data.Ingame_data["held_item"] = None
+            ingame_level_data.Ingame_data["checkpoints"] = config.Level_preset[level]["checkpoints"]
+            ingame_level_data.Ingame_data["enemy_count"] = config.Level_preset[level]["enemy_count"]

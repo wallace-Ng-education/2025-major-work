@@ -12,10 +12,13 @@ fps = config.Initialise["fps"]
 linear_dps = config.Tower_preset["Linear tower"]["dps"]
 parabola_dps = config.Tower_preset["Parabola tower"]["dps"]
 
+"""
+# previously used function, might be useful
 def sgn(angle):
   if angle == 0:
     return 0
   return int(math.copysign(1, angle)) # returns either -1, 0, 1
+"""
 
 class Attacks(pygame.sprite.Sprite):
     def __init__(self, resize_factor: float, location: Vector2):
