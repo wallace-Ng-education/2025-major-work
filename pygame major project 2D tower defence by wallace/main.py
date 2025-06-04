@@ -117,11 +117,22 @@ def pass_level(level: str):
     # no more enemies to be spawned, all spawned enemies killed --> passed!
     if not ingame_level_data.Ingame_data["Enemy_prep_list"] and not ingame_level_data.Ingame_data["Enemy_list"]:
         ingame_level_data.Ingame_data["Dialogue_list"][1].draw()
+        
+        show_level = player_font.render(level, True, (255, 255, 255))
+        screen.blit(show_level, [i * ingame_level_data.Ingame_data["resize_factor"] for i in [440, 150]])
+
+        show_tower_placed = player_font.render(f"tower placed: {ingame_level_data.Ingame_data["tower_placed"]}", True, (38, 255, 74))
+        screen.blit(show_tower_placed, [i * ingame_level_data.Ingame_data["resize_factor"] for i in [180, 240]])
+
+        show_health_remaining = player_font.render(f"health remaining : {int(ingame_level_data.Ingame_data["current_player_health"])}", True, (38, 255, 74))
+        screen.blit(show_health_remaining, [i * ingame_level_data.Ingame_data["resize_factor"] for i in [180, 280]])
+
+        pygame.display.update()
+
         play_sound_pause_music("happyendSOUND")
         time.sleep(0.5)
         global level_selected 
         level_selected = -1
-        pygame.display.update()
 
         not_clicked = True
         while not_clicked:
@@ -276,7 +287,7 @@ def path_point_distance_check(location: Vector2, min_distance: float):
         distance: float
     """
     old_point = None
-        #print(ingame_level_data.Ingame_data["checkpoints"]) # error testing
+    #print(ingame_level_data.Ingame_data["checkpoints"]) # error testing
     min_distance *= ingame_level_data.Ingame_data["resize_factor"]
     for i in ingame_level_data.Ingame_data["checkpoints"]:
         i = Vector2(i)
@@ -284,7 +295,7 @@ def path_point_distance_check(location: Vector2, min_distance: float):
         if old_point:
             # some vector manipulations to find out distance of the 
             path_normalized = pygame.Vector2.normalize(i - old_point)
-                #pygame.draw.line(screen, (0,0,233), old_point, i, 3) # error testing
+            pygame.draw.line(screen, (0,0,233), old_point, i, 3) # error testing
             projection_from_i = pygame.Vector2.dot(path_normalized, i - location) * path_normalized
             projection_from_old_point = pygame.Vector2.dot(path_normalized, old_point - location) * path_normalized
             
@@ -464,7 +475,9 @@ def initialise(level):
     time_level_init = pygame.time.get_ticks()/1000
 
     ingame_level_data.Ingame_data["held_item"] = None
-    for c in config.Level_preset["level1"]["checkpoints"]:
+
+    ingame_level_data.Ingame_data["checkpoints"] = []
+    for c in config.Level_preset[level]["checkpoints"]:
         ingame_level_data.Ingame_data["checkpoints"].append((c[0] * ingame_level_data.Ingame_data["resize_factor"], c[1] * ingame_level_data.Ingame_data["resize_factor"]))
     ingame_level_data.Ingame_data["enemy_count"] = config.Level_preset[level]["enemy_count"]
 
@@ -659,6 +672,151 @@ while running:
                             k.resize(ingame_level_data.Ingame_data["resize_factor"])
 
                         background = pygame.transform.scale_by(config.Level_preset["level1"]["background"], ingame_level_data.Ingame_data["resize_factor"])
+
+
+                # move enemies from prep list to list at certain time
+                spawn_enemies()
+
+                # put the changed things on screen
+                pygame.display.update()
+
+                clock.tick(fps)
+
+        case 4:
+            initialise("level4")
+
+
+            # start loop for level 4
+            while level_selected == 4:
+                # insert background image
+                screen.fill((30, 10, 0))
+                screen.blit(background, (0, 0))
+
+                # display player health
+                display_player_data()
+                
+                error_message()
+                ingame_level_data.Ingame_data["Tower_list"].draw(screen)
+                for tower in ingame_level_data.Ingame_data["Tower_list"]:
+                    tower.aim()
+
+                ingame_level_data.Ingame_data["Attack_list"].draw(screen)
+                for attack in ingame_level_data.Ingame_data["Attack_list"]:
+                    attack.tick()
+
+                # make every Enemy object do what they are supposed to
+                for enemy in ingame_level_data.Ingame_data["Enemy_list"]:
+                    enemy.move()
+                ingame_level_data.Ingame_data["Enemy_list"].draw(screen)
+
+                for enemy in  ingame_level_data.Ingame_data["Enemy_list"]:
+                    enemy.show_health(enemy.health, enemy.location)
+                    
+                for shop_item in ingame_level_data.Ingame_data["Shop_item_list"]:
+                    shop_item.draw()
+
+                for button in ingame_level_data.Ingame_data["Button_list"]:
+                    button.draw()
+
+                # check if passed
+                pass_level("level4")
+
+                # check if have health
+                fail_level()
+                
+                # function to exit the game while player pressed X on game window
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        running = False
+                        level_selected = False
+
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
+                        mouse = pygame.mouse.get_pos()
+                        # print(mouse) # for testing
+                        # pressed on UI
+                        if ingame_level_data.Ingame_data["Rect_list"][0].check_press(mouse):
+
+                            if ingame_level_data.Ingame_data["Button_list"][0].check_press(mouse): # pressed on pause button
+                                pause_level()
+                                break
+                                
+
+                            elif ingame_level_data.Ingame_data["Button_list"][1].check_press(mouse): # pressed on home button
+                                level_selected = -1
+                                ingame_level_data.Ingame_data["Enemy_dead_list"].empty()
+                                ingame_level_data.Ingame_data["Enemy_list"].empty()
+                                ingame_level_data.Ingame_data["Enemy_prep_list"] = []
+                                ingame_level_data.Ingame_data["Tower_list"].empty()
+                                play_sound_pause_music("homeSOUND")
+                                break
+
+
+                            elif ingame_level_data.Ingame_data["held_item"] == None: # pressed shop and has not bought anything yet
+                                for i in ingame_level_data.Ingame_data["Shop_item_list"]:
+                                    if i.check_press(mouse):
+                                        if i.name == "Linear tower":
+                                            if ingame_level_data.Ingame_data["current_player_currency"] >= i.price: # enough currency to buy!
+                                                ingame_level_data.Ingame_data["current_player_currency"] -= i.price
+                                                ingame_level_data.Ingame_data["held_item"] = 1
+                                                break
+                                            else: error_list.append([2, f"You need {i.price - ingame_level_data.Ingame_data["current_player_currency"]} more to buy the tower."])
+
+                                        elif i.name == "Parabola tower":
+                                            if ingame_level_data.Ingame_data["current_player_currency"] >= i.price: # enough currency to buy!
+                                                ingame_level_data.Ingame_data["current_player_currency"] -= i.price
+                                                ingame_level_data.Ingame_data["held_item"] = 2
+                                                break
+                                            else: error_list.append([2, f"You need {i.price - ingame_level_data.Ingame_data["current_player_currency"]} more to buy the tower."])
+                                            
+                                        else:
+                                           error_list.append([2, i.name + 'this is not yet implemented'])
+                                break
+
+                            else: # clicked on shop UI with a item held -> they should not
+                                error_list.append([2, "You are holding a tower! click on the battlefield to place it."]) 
+                                break
+
+                        #  pressing on the field
+                        elif ingame_level_data.Ingame_data["Rect_list"][1].check_press(mouse): 
+                            match ingame_level_data.Ingame_data["held_item"]:
+                                case None: # check if pressing on tower
+                                    clicked = False
+                                    for i in ingame_level_data.Ingame_data["Tower_list"]:
+                                        if i.check_press(mouse):
+                                            clicked = True
+                                            break
+                                    if not clicked: # not pressing on any tower
+                                        error_list.append([2, "You are not holding or clicking on a tower."])
+                                    break
+
+                                case 1:
+                                    place_tower("Linear", "level4", Vector2(pygame.mouse.get_pos()))
+                                    break
+
+                                case 2:
+                                    place_tower("Parabola", "level4", Vector2(pygame.mouse.get_pos()))
+                                    break
+                        
+                        else: # clicking out of bounds
+                            error_list.append([2, "Here is out of bounds!"])
+
+
+                    elif event.type == pygame.VIDEORESIZE:
+                        resize_factor_get()
+                        generate_button("level4")
+                        player_font = pygame.font.SysFont(config.Initialise["player_font"][0], round(config.Initialise["player_font"][1] * ingame_level_data.Ingame_data["resize_factor"]), config.Initialise["player_font"][2], config.Initialise["player_font"][3])
+                        player_font = player_font = pygame.font.SysFont(config.Initialise["player_font"][0], round(config.Initialise["player_font"][1]  * ingame_level_data.Ingame_data["resize_factor"]), config.Initialise["player_font"][2], config.Initialise["player_font"][3])
+                        ingame_level_data.Ingame_data["checkpoints"] = []
+                        for c in config.Level_preset["level4"]["checkpoints"]:
+                            ingame_level_data.Ingame_data["checkpoints"].append((c[0] * ingame_level_data.Ingame_data["resize_factor"], c[1] * ingame_level_data.Ingame_data["resize_factor"]))
+                        for i in ingame_level_data.Ingame_data["Enemy_list"]:
+                            i.resize(ingame_level_data.Ingame_data["resize_factor"])
+                        for j in ingame_level_data.Ingame_data["Tower_list"]:
+                            j.resize(ingame_level_data.Ingame_data["resize_factor"])
+                        for k in ingame_level_data.Ingame_data["Attack_list"]:
+                            k.resize(ingame_level_data.Ingame_data["resize_factor"])
+
+                        background = pygame.transform.scale_by(config.Level_preset["level4"]["background"], ingame_level_data.Ingame_data["resize_factor"])
 
 
                 # move enemies from prep list to list at certain time

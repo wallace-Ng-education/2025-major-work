@@ -161,7 +161,7 @@ class Shop_item():
 
         self.query_rect =[i * resize_factor for i in [50, 50, 840, 440]]
         self.query_inner_rect = [i * resize_factor for i in [60, 60, 820, 420]]
-        self.query_image_cords = [i * resize_factor for i in [70, 70]]
+        self.query_image_cords = [i * resize_factor for i in [70, -30]]
         self.query_line_start = [i * resize_factor for i in [70, 180]]
         self.query_line_end = [i * resize_factor for i in [870, 180]]
         self.query_line_width = int(resize_factor * 5)
@@ -190,7 +190,7 @@ class Shop_item():
             pygame.draw.rect(screen, (120, 81, 46), pygame.Rect(self.query_inner_rect))
 
             # above line
-            screen.blit(pygame.transform.scale_by(self.towerIMG, 3), self.query_image_cords)
+            screen.blit(pygame.transform.scale_by(self.towerIMG, 2), self.query_image_cords)
             screen.blit(self.show_query_name, self.query_name_cords)
             screen.blit(self.show_query_price, self.query_price_cords)
             screen.blit(self.show_query_dps, self.query_dps_cords)

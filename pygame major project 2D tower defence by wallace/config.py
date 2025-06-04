@@ -87,7 +87,7 @@ Level_preset = {
         # (0,0) is not a valid checkpoint
         "checkpoints": [(0, 1), (260, 180), (120, 300), (300, 400), (530, 230), (710, 350), (570, 470), (700, 570)],
         "player_health": 100,
-        "player_currency": 10000,
+        "player_currency": 100,
         # pause, home
         "button_data": [[Initialise["button_pauseIMG"],[840,0]],[Initialise["button_homeIMG"],[890,0]]],
         # badend, happyend
@@ -109,7 +109,7 @@ Level_preset = {
                 # distance in pixels
                 "distance_per_second": 100,
                 "image": Initialise["enemy_snakeIMG"],
-                "spawn_time": (tuple([x for x in range(10, 10000)])),
+                "spawn_time": [17, 19, 20, 21, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58],
                 "bounty": 20
             },
             "ant_g": {
@@ -117,22 +117,22 @@ Level_preset = {
                 # distance in pixels
                 "distance_per_second": 200,
                 "image": Initialise["enemy_ant_gIMG"],
-                "spawn_time": {1, 2,3,4,5}, # (tuple([x/100 for x in range(1000)])),
-                "bounty": 10
+                "spawn_time": {1, 5, 6, 13, 14, 16, 33, 34, 36, 37, 48, 50, 52},
+                "bounty": 15
             },
             "ant_s": {
-                "health": 200,
+                "health": 150,
                 # distance in pixels
-                "distance_per_second": 100,
+                "distance_per_second": 150,
                 "image": Initialise["enemy_ant_sIMG"],
-                "spawn_time": {7,8,9,20}, # (tuple([x/100 for x in range(1000)])),
+                "spawn_time": {18, 19, 20, 21, 22, 23, 32, 33, 34, 35, 36, 37, 48, 49, 50, 51, 52, 53, 54, 55}, # (tuple([x/100 for x in range(1000)])),
                 "bounty": 10
             }
         },
         # (0,0) is not a valid checkpoint
-        "checkpoints": [(0, 1), (260, 180), (120, 300), (300, 400), (530, 230), (710, 350), (570, 470), (700, 570)],
+        "checkpoints": [(0, 1), (282, 279), (400, 187), (744, 550)],
         "player_health": 100,
-        "player_currency": 100,
+        "player_currency": 150,
         # pause, home
         "button_data": [[Initialise["button_pauseIMG"],[840,0]],[Initialise["button_homeIMG"],[890,0]]],
         # badend, happyend
@@ -157,7 +157,7 @@ Tower_preset = {
         "range" : 200,
     },
     "Parabola tower": {
-        "dps": 10,
+        "dps": 30,
         "description" : "Knocks back!",
         "details" : ["This tower shoots a growing curve knocking back enemies. This is also how parabola", " graphs looks like - also a curve curving at a linear rate. The equation would be y = Ax^2", " or Ay^2 = x, where ^2 means to the power of two. Be aware that you will only learn", " about parabolas facing verticly and horizontally in high school."],
         "price" : 50,
