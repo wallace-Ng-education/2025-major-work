@@ -60,15 +60,44 @@ Level_preset = {
         "music": "pygame major project 2D tower defence by wallace/audio/HomeMUSIC.mp3",
     },
 
+    # tutorial
+    "tutorial": {
+        "enemy_data": {
+            "snake": {
+                "health": 100,
+                # distance in pixels
+                "distance_per_second": 100,
+                "image": Initialise["enemy_snakeIMG"],
+                "spawn_time": {1,7.4, 8.1, 8.9, 9.5, 10.0, 10.4, 10.9, 11.3, 11.9, 17.6, 18.2, 18.8, 19.3, 19.7, 20.0, 20.4, 20.8, 21.3, 21.8},
+                "bounty": 20
+            },
+        },
+        # (0,0) is not a valid checkpoint
+        "checkpoints": [(0, 270), (740, 270)],
+        "player_health": 100,
+        "player_currency": 100,
+        # pause, home
+        "button_data": [[Initialise["button_pauseIMG"],[840,0]],[Initialise["button_homeIMG"],[890,0]]],
+        # badend, happyend, other dialogues with a time 
+        "dialogue_data": [[Initialise["Dialogue_badend"],[90,55]],[Initialise["Dialogue_happyend"],[90,55]]],
+        # UI, battlefield
+        "rect_data":[[735, 0 , 200, 540],[0, 0 , 735, 540]],
+        # for every shop item [tower_image, name: str, description: str, price: int, unlocked:bool, price:int]
+        "shop_data": [["Linear tower", True]],
+        "enemy_count": 20,
+        "background": pygame.image.load('pygame major project 2D tower defence by wallace/assets/TutorialIMG.png'),
+        "music": "pygame major project 2D tower defence by wallace/audio/TutorialMUSIC.mp3"
+        },
+
     # 1
     "level1": {
         "enemy_data": {
             "snake": {
-                "health": 150,
+                "health": 120,
                 # distance in pixels
                 "distance_per_second": 100,
                 "image": Initialise["enemy_snakeIMG"],
-                "spawn_time": [
+                "spawn_time": {
                                 # Group 1 (center 5, 3 numbers)
                                 1.00, 1.85, 4.45,
                                 
@@ -80,7 +109,7 @@ Level_preset = {
                                 
                                 # Group 4 (center 20, 13 numbers)
                                 19.65, 19.95, 20.00, 20.55, 20.85, 21.00, 21.15, 22.45, 23.75, 24.05, 25.35, 26.65, 27.95
-                                ],
+                                },
                 "bounty": 20
             },
         },
@@ -101,6 +130,81 @@ Level_preset = {
         "music": "pygame major project 2D tower defence by wallace/audio/Lv1MUSIC.mp3"
         },
 
+    # 2
+    "level2": {
+        "enemy_data": {
+            "snake": {
+                "health": 150,
+                # distance in pixels
+                "distance_per_second": 100,
+                "image": Initialise["enemy_snakeIMG"],
+                "spawn_time": {8, 9, 10 , 11, 11.5, 19.5, 21, 21.5, 22, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40},
+                "bounty": 20
+            },
+
+            "ant_s": {
+                "health": 125,
+                # distance in pixels
+                "distance_per_second": 125,
+                "image": Initialise["enemy_ant_sIMG"],
+                "spawn_time": {1, 3, 9, 10, 11, 20, 22, 23, 25, 27, 29, 30, 33, 35, 36, 36, 37, 38, 39, 40}, 
+                "bounty": 10
+            }
+        },
+        # (0,0) is not a valid checkpoint
+        "checkpoints": [(-10, 412), (75, 458), (432, 273), (761, 458)],
+        "player_health": 100,
+        "player_currency": 170,
+        # pause, home
+        "button_data": [[Initialise["button_pauseIMG"],[840,0]],[Initialise["button_homeIMG"],[890,0]]],
+        # badend, happyend
+        "dialogue_data": [[Initialise["Dialogue_badend"],[90,55]],[Initialise["Dialogue_happyend"],[90,55]]],
+        # UI, battlefield
+        "rect_data":[[735, 0 , 200, 540],[0, 0 , 735, 540]],
+        # for every shop item [tower_image, name: str, description: str, price: int, unlocked:bool, price:int]
+        "shop_data": [["Linear tower", True]],
+        "enemy_count": 40,
+        "background": pygame.image.load('pygame major project 2D tower defence by wallace/assets/Lv2IMG.png'),
+        "music": "pygame major project 2D tower defence by wallace/audio/Lv2MUSIC.mp3",
+        },
+
+    # 3
+    "level3": {
+        "enemy_data": {
+            "ant_g": {
+                "health": 60,
+                # distance in pixels
+                "distance_per_second": 200,
+                "image": Initialise["enemy_ant_gIMG"],
+                "spawn_time": {1, 5, 6, 19, 13, 16, 33, 34, 36, 37, 38, 39, 40},
+                "bounty": 30
+            },
+            "ant_s": {
+                "health": 150,
+                # distance in pixels
+                "distance_per_second": 150,
+                "image": Initialise["enemy_ant_sIMG"],
+                "spawn_time": {23, 26, 27.1, 27.3, 27.5, 27.6, 27.9, 28.0, 28.1, 28.2, 28.4, 28.5, 28.6, 28.9, 29.1, 38.2, 38.3, 38.5, 38.6, 38.8, 38.9, 39.0, 39.1, 39.3, 39.4, 39.6, 39.8},
+                "bounty": 15
+            }
+        },
+        # (0,0) is not a valid checkpoint
+        "checkpoints": [(19, 32), (440, 412), (645, 201), (498, 79), (153, 398), (302, 536)],
+        "player_health": 100,
+        "player_currency": 95,
+        # pause, home
+        "button_data": [[Initialise["button_pauseIMG"],[840,0]],[Initialise["button_homeIMG"],[890,0]]],
+        # badend, happyend
+        "dialogue_data": [[Initialise["Dialogue_badend"],[90,55]],[Initialise["Dialogue_happyend"],[90,55]]],
+        # UI, battlefield
+        "rect_data":[[735, 0 , 200, 540],[0, 0 , 735, 540]],
+        # for every shop item [tower_image, name: str, description: str, price: int, unlocked:bool, price:int]
+        "shop_data": [["Linear tower", True], ["Parabola tower", True]],
+        "enemy_count": 40,
+        "background": pygame.image.load('pygame major project 2D tower defence by wallace/assets/Lv3IMG.png'),
+        "music": "pygame major project 2D tower defence by wallace/audio/Lv3MUSIC.mp3",
+        },
+
     # 4
     "level4": {
         "enemy_data": {
@@ -109,7 +213,7 @@ Level_preset = {
                 # distance in pixels
                 "distance_per_second": 100,
                 "image": Initialise["enemy_snakeIMG"],
-                "spawn_time": [17, 19, 20, 21, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58],
+                "spawn_time": {17, 19, 20, 21, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 45, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58},
                 "bounty": 20
             },
             "ant_g": {
