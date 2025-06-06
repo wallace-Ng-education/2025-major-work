@@ -16,7 +16,7 @@ class Button():
         self.position_in_list = position_in_list # position in the preset list, starting from 0
         # in format of "levelx" , x is an integer
         self.level = level
-        self.storage = "button_data"
+        self.set_storage()
 
         # get the data according to the position
         ##################################################################################
@@ -42,6 +42,9 @@ class Button():
             return True
         else: return False
 
+    def set_storage(self):
+        self.storage = "button_data"
+
 
 # button that is not drawn every tick, stored in another list
 class Dialogue(Button):
@@ -52,12 +55,18 @@ class Dialogue(Button):
         self.position_in_list = position_in_list # position in the preset list, starting from 0
         # in format of "levelx" , x is an integer
         self.level = level
-        self.storage = "dialogue_data"
 
         # get the data according to the position
         ##################################################################################
         self.original_image = config.Level_preset[self.level][self.storage][self.position_in_list][0]
         self.resize(ingame_level_data.Ingame_data["resize_factor"])
+
+    def set_storage(self):
+        self.storage = "dialogue_data"
+
+    def time(self):
+        if self.position_in_list >= 2:
+            return config.Level_preset[self.level][self.storage][self.position_in_list][2]
 
 
 # button without the image

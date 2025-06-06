@@ -395,7 +395,7 @@ def dialogue_show(current_time: float):
         A dialogue object is drawn
     """
         # check if the player have any health left --> should add a death message / screen / score
-    if current_time <= ingame_level_data.Ingame_data["Dialogue_list"][2]:
+    if current_time >= ingame_level_data.Ingame_data["Dialogue_list"][2].time():
         ingame_level_data.Ingame_data["Dialogue_list"][2].draw()
         play_sound("pauseSOUND")
         time.sleep(0.5)
@@ -415,10 +415,8 @@ def dialogue_show(current_time: float):
                     # Buttons
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         not_clicked = False
-                        ingame_level_data.Ingame_data["Enemy_dead_list"].empty()
-                        ingame_level_data.Ingame_data["Enemy_list"].empty()
-                        ingame_level_data.Ingame_data["Enemy_prep_list"] = []
-                        ingame_level_data.Ingame_data["Tower_list"].empty()
+                        play_sound("unpauseSOUND")
+                        ingame_level_data.Ingame_data["Dialogue_list"].pop(2)
                         break
 
 def resize_factor_get():
