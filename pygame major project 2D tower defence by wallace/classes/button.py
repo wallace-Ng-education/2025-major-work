@@ -192,30 +192,46 @@ class Shop_item():
         self.show_query_return = self.big_font.render('click again to resume', True, (255, 255, 255))
 
     def query(self):
-        query = True
-        while query == True:
-            # boarder
-            pygame.draw.rect(screen, (102, 51, 0), pygame.Rect(self.query_rect))
-            pygame.draw.rect(screen, (120, 81, 46), pygame.Rect(self.query_inner_rect))
+        # boarder
+        pygame.draw.rect(screen, (102, 51, 0), pygame.Rect(self.query_rect))
+        pygame.draw.rect(screen, (120, 81, 46), pygame.Rect(self.query_inner_rect))
 
-            # above line
-            screen.blit(pygame.transform.scale_by(self.towerIMG, 2), self.query_image_cords)
-            screen.blit(self.show_query_name, self.query_name_cords)
-            screen.blit(self.show_query_price, self.query_price_cords)
-            screen.blit(self.show_query_dps, self.query_dps_cords)
+        # above line
+        screen.blit(pygame.transform.scale_by(self.towerIMG, 2), self.query_image_cords)
+        screen.blit(self.show_query_name, self.query_name_cords)
+        screen.blit(self.show_query_price, self.query_price_cords)
+        screen.blit(self.show_query_dps, self.query_dps_cords)
+    
+        pygame.draw.line(screen, (102, 51, 0), self.query_line_start, self.query_line_end, self.query_line_width)
+        # below line
+
+        for i in range(0, len(self.query_details_cords)):
+            screen.blit(self.show_query_details[i], self.query_details_cords[i])
+        screen.blit(self.show_query_return, self.query_return_cords)
+
+        pygame.display.update()
+
+        paused = True
+        pause_begin_time = pygame.time.get_ticks() / 1000
         
-            pygame.draw.line(screen, (102, 51, 0), self.query_line_start, self.query_line_end, self.query_line_width)
-            # below line
+        pygame.time.wait(500)
+        # clear event que so that inputs in the 0.5s will not take action, avoiding double click issues
+        pygame.event.clear()
 
-            for i in range(0, len(self.query_details_cords)):
-                screen.blit(self.show_query_details[i], self.query_details_cords[i])
-            screen.blit(self.show_query_return, self.query_return_cords)
-
-            pygame.display.update()
+        while paused == True:
 
             for event in pygame.event.get():
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        query = False
+                    if event.type == pygame.QUIT:
+                        # quit the loop of this level and game level
+                        ingame_level_data.Ingame_data["running"] = False
+                        ingame_level_data.Ingame_data["level_selected"] = False
+                        paused = False
+                        break
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
+                        paused = False
+                        ingame_level_data.Ingame_data["time_paused"] += pygame.time.get_ticks() / 1000 - pause_begin_time
+                        break
+
 
     def check_press(self, mouse_pos):
         # check if pressed on this item

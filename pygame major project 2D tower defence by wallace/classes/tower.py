@@ -90,7 +90,6 @@ class Tower(pygame.sprite.Sprite):
         if self.original_range: self.range = self.original_range * resize_factor
         self.resize_factor = resize_factor
 
-
     def check_press(self, mouse_pos: Vector2):
         # check if pressed on this item
         # self.location is the center of towers
@@ -103,14 +102,28 @@ class Tower(pygame.sprite.Sprite):
                 pygame.draw.circle(screen, (255, 255, 255), self.location, self.range, width=1)
                 pygame.display.update()
                 # clicked on this tower
-                pause = True
-                while pause:
+                paused = True
+                pause_begin_time = pygame.time.get_ticks() / 1000
+                
+                pygame.time.wait(500)
+                # clear event que so that inputs in the 0.5s will not take action, avoiding double click issues
+                pygame.event.clear()
+                while paused:
                     for event in pygame.event.get():
-                        if event.type == pygame.MOUSEBUTTONDOWN:
-                            pause = False
+                        if event.type == pygame.QUIT:
+                            # quit the loop of this level and game level
+                            ingame_level_data.Ingame_data["running"] = False
+                            ingame_level_data.Ingame_data["level_selected"] = False
+                            paused = False
+                            break
+                        elif event.type == pygame.MOUSEBUTTONDOWN:
+                            paused = False
+                             # find paused time for finding the actual ingame_level_data.Ingame_data["running"] time of the level
+                            ingame_level_data.Ingame_data["time_paused"] += pygame.time.get_ticks() / 1000 - pause_begin_time
                             break
             return True
         else: return False
+
 
 class Linear(Tower):
     def __init__(self, tower_type, level, location: Vector2):
@@ -178,13 +191,27 @@ class Parabola(Tower):
             pygame.display.update()
             
             # clicked on this tower
-            pause = True
-            while pause:
+            paused = True
+            pause_begin_time = pygame.time.get_ticks() / 1000
+
+            pygame.time.wait(500)
+            # clear event que so that inputs in the 0.5s will not take action, avoiding double click issues
+            pygame.event.clear()
+            while paused:
                 for event in pygame.event.get():
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        mouse = pygame.mouse.get_pos()
-                        pause = False
+                    if event.type == pygame.QUIT:
+                        # quit the loop of this level and game level
+                        ingame_level_data.Ingame_data["running"] = False
+                        ingame_level_data.Ingame_data["level_selected"] = False
+                        paused = False
                         break
+
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
+                        mouse = pygame.mouse.get_pos()
+                        paused = False
+                        ingame_level_data.Ingame_data["time_paused"] += pygame.time.get_ticks() / 1000 - pause_begin_time
+                        break
+                    
             self.rotate(mouse)
             return True
         else: return False

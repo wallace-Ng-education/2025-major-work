@@ -19,6 +19,9 @@ Dialogue_list: list = []
 Ingame_data = {
         "current_player_health": None,
         "current_player_currency": None,
+        "held_item": None,
+        "tower_placed": 0,
+
         "Enemy_list": Enemy_list,
         "Enemy_prep_list": Enemy_prep_list,
         "Enemy_dead_list": Enemy_dead_list,
@@ -28,10 +31,16 @@ Ingame_data = {
         "Button_list": Button_list,
         "Rect_list": Rect_list,
         "Dialogue_list": Dialogue_list,
+
         # resize factor of 1 means no change in sie
         "resize_factor": 1,
-        "held_item": None,
-        "tower_placed": 0,
         "checkpoints": [],
         "enemy_count": 0,
+        
+        "time_level_init": None,
+        "time_paused": 0,
+
+        "running": False,
+        "level_selected": None,
+        "level_running": None
 }

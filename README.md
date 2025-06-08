@@ -34,7 +34,7 @@ The `config.py` file defines `Initialise`, `Level_preset` and `Tower_preset` dic
    pip install pygame
    ```
 
-## Running the game
+## ingame_level_data.Ingame_data["running"] the game
 
 Execute `main.py` from the project directory:
 
