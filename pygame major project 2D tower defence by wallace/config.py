@@ -254,6 +254,51 @@ Level_preset = {
         "background": pygame.image.load('pygame major project 2D tower defence by wallace/assets/Lv4IMG.png'),
         "music": "pygame major project 2D tower defence by wallace/audio/Lv4MUSIC.mp3",
         },
+
+    # endless
+    "endless": {
+        "enemy_data": {
+            "snake": {
+                "health": 200,
+                # distance in pixels
+                "distance_per_second": 100,
+                "image": Initialise["enemy_snakeIMG"],
+                "spawn_time": {4, 12, 19, 24, 30},
+                "bounty": 20
+            },
+            "ant_g": {
+                "health": 100,
+                # distance in pixels
+                "distance_per_second": 200,
+                "image": Initialise["enemy_ant_gIMG"],
+                "spawn_time": {13, 16, 23},
+                "bounty": 15
+            },
+            "ant_s": {
+                "health": 150,
+                # distance in pixels
+                "distance_per_second": 150,
+                "image": Initialise["enemy_ant_sIMG"],
+                "spawn_time": {18, 26, 30}, # (tuple([x/100 for x in range(1000)])),
+                "bounty": 10
+            }
+        },
+        # (0,0) is not a valid checkpoint
+        "checkpoints": [(0, 1), (171, 144), (70, 309), (167, 392), (304, 233), (416, 364), (538, 250)],
+        "player_health": 100,
+        "player_currency": 150,
+        # pause, home
+        "button_data": [[Initialise["button_pauseIMG"],[840,0]],[Initialise["button_homeIMG"],[890,0]]],
+        # badend, happyend
+        "dialogue_data": [[Initialise["Dialogue_badend"],[90,55]],[Initialise["Dialogue_happyend"],[90,55]]],
+        # UI, battlefield
+        "rect_data":[[735, 0 , 200, 540],[0, 0 , 735, 540]],
+        # for every shop item [tower_image, name: str, description: str, price: int, unlocked:bool, price:int]
+        "shop_data": [["Linear tower", True], ["Parabola tower", True]],
+        "enemy_count": "endless",
+        "background": pygame.image.load('pygame major project 2D tower defence by wallace/assets/Lv5IMG.png'),
+        "music": "pygame major project 2D tower defence by wallace/audio/Lv5MUSIC.mp3",
+        },
 }
 
 Tower_preset = {

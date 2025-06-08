@@ -124,6 +124,11 @@ class Enemy(pygame.sprite.Sprite):
         self.location += knockback_range
         self.knockback_resistance = min(knockback_value - self.knockback_minimum, self.knockback_resistance * self.knockback_resistance_growth_value)
 
+    def strengthen(self, strengthen_value: float):
+        # for a slow but unlimited strengthen on lv5 enemies
+        self.health *= 1.06 ** strengthen_value
+        self.knockback_minimum /= 1.06 ** strengthen_value
+
 
 class Snake(Enemy):
     # equal sign
