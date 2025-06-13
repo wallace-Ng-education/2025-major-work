@@ -427,7 +427,8 @@ def dialogue_show(time_called: float):
     Result:
         A dialogue object is drawn
     """
-    
+    #print(time_called)
+    #print(f"{time_called - ingame_level_data.Ingame_data["Dialogue_list"][2].time()} = {time_called} -  {ingame_level_data.Ingame_data["Dialogue_list"][2].time()}")
     if  time_called >= ingame_level_data.Ingame_data["Dialogue_list"][2].time(): # time for the dialogue to be shown
         ingame_level_data.Ingame_data["Dialogue_list"][2].draw()
         play_sound("pauseSOUND")
@@ -449,14 +450,15 @@ def dialogue_show(time_called: float):
                         paused = False
                         break
 
-                    # Buttons
+                    # unpause
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         paused = False
                         play_sound("unpauseSOUND")
                         ingame_level_data.Ingame_data["Dialogue_list"].pop(2)
 
                         # total paused time in the time in the level for finding the actual ingame_level_data.Ingame_data["running"] time of the level
-                        ingame_level_data.Ingame_data["time_paused"] += pygame.time.get_ticks() / 1000 - time_called - ingame_level_data.Ingame_data["time_level_init"]
+                        ingame_level_data.Ingame_data["time_paused"] += pygame.time.get_ticks() / 1000 - time_called - ingame_level_data.Ingame_data["time_level_init"] - ingame_level_data.Ingame_data["time_paused"]
+                        #print(ingame_level_data.Ingame_data["time_paused"])
                         break
 
 def resize_factor_get():

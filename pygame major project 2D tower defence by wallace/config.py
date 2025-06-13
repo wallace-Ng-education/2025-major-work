@@ -83,11 +83,9 @@ Level_preset = {
                           [Initialise["Dialogue_happyend"],[90,55]], 
                           [pygame.image.load('pygame major project 2D tower defence by wallace/assets/Dialogue_tutorial_story.png').convert_alpha(),[90,55], 1],
                           [pygame.image.load('pygame major project 2D tower defence by wallace/assets/Dialogue_tutorial_enemy_snake.png').convert_alpha(),[-30,55], 1.7], 
-                          # same time but since only one dialogue will appear in a frame, they are seperated in time and thus visually incomplicated
-                          [pygame.image.load('pygame major project 2D tower defence by wallace/assets/Dialogue_tutorial_tower.png').convert_alpha(),[0,90], 1.7]],
+                          [pygame.image.load('pygame major project 2D tower defence by wallace/assets/Dialogue_tutorial_tower.png').convert_alpha(),[0,90], 1.71]],
         # UI, battlefield
         "rect_data":[[735, 0 , 200, 540],[0, 0 , 735, 540]],
-        # for every shop item [tower_image, name: str, description: str, price: int, unlocked:bool, price:int]
         "shop_data": [["Linear tower", True]],
         "enemy_count": 20,
         "background": pygame.image.load('pygame major project 2D tower defence by wallace/assets/TutorialIMG.png'),
