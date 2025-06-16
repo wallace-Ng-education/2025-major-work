@@ -34,11 +34,16 @@ Initialise = {
 
     # audio initialise
     "badendSOUND": pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/badendSOUND.mp3"),
+    "button_pressedSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/button_pressedSOUND.mp3"),
+    "currency_getSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/currency_getSOUND.mp3"),
+    "enemy_antSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/enemy_antSOUND.mp3"),
+    "enemy_snakeSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/enemy_snakeSOUND.mp3"),
     "happyendSOUND": pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/happyendSOUND.mp3"),
-    "pauseSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/pauseSOUND.mp3"),
-    "unpauseSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/unpauseSOUND.mp3"),
     "homeSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/homeSOUND.mp3"),
-
+    "pauseSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/pauseSOUND.mp3"),
+    "player_hurtSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/player_hurtSOUND.mp3"),
+    "tower_buildSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/tower_buildSOUND.mp3"),
+    "unpauseSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/unpauseSOUND.mp3"),
 
     # frames per second
     "fps" : 30
@@ -317,3 +322,16 @@ Tower_preset = {
         "range" : 230,
     }
 }
+
+def play_sound(sound: str):
+    """
+    playe sound effect
+
+    Args:
+        sound: A string corresponding to the key in the dictionary config.Initialise
+
+    Result:
+        sound effect being played, not pausing previous music
+    """
+    pygame.mixer.Sound.play(Initialise[sound])
+

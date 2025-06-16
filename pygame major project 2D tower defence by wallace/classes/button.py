@@ -1,6 +1,8 @@
 import pygame
 import config
 import ingame_level_data
+from config import play_sound
+
 
 # get global data from config
 screen = config.Initialise["screen"]
@@ -39,11 +41,14 @@ class Button():
     def check_press(self, mouse_pos):
         # check if pressed on this item
         if self.x <= mouse_pos[0] <= (self.x + self.rect[2]) and self.y <= mouse_pos[1] <= (self.y + self.rect[3]):
+
             return True
         else: return False
 
     def set_storage(self):
         self.storage = "button_data"
+
+    
 
 
 # button that is not drawn every tick, stored in another list
@@ -236,6 +241,7 @@ class Shop_item():
     def check_press(self, mouse_pos):
         # check if pressed on this item
         if self.x <= mouse_pos[0] <= (self.x + self.rect[2]) and self.y <= mouse_pos[1] <= (self.y + self.rect[3]):
+            play_sound("button_pressedSOUND")
             if self.queryIMG_x <= mouse_pos[0] and self.queryIMG_y <= mouse_pos[1] <= (self.queryIMG_y + self.queryIMG_height):
                 self.query()
                 return False

@@ -4,6 +4,7 @@ from pygame.math import Vector2
 import ingame_level_data
 import random
 import copy
+from config import play_sound
 
 # get global data from config
 screen = config.Initialise["screen"]
@@ -25,7 +26,7 @@ class Enemy(pygame.sprite.Sprite):
         self.level = level
         self.spawn_time = spawn_time
 
-        # get the data according to the enemy type
+        # get the data that might change between levels according to the enemy type in the level
         ##################################################################################
         # distance/frame = (distance/second) / (frame/second)
         # so the speed of enemies will not change when changing the fps
@@ -50,6 +51,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = self.location
 
+        # some constants for the enemy type
         self.old_resize_factor = 1
 
         self.knockback_resistance = 1
@@ -65,6 +67,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def death(self):
         ingame_level_data.Ingame_data["current_player_currency"] += self.bounty
+        play_sound("currency_getSOUND")
         self.kill()
 
 
@@ -97,6 +100,7 @@ class Enemy(pygame.sprite.Sprite):
         # enemy has finished path
         else:
             ingame_level_data.Ingame_data["current_player_health"] -= self.health
+            play_sound("player_hurtSOUND")
             self.death()
 #            print('-' , self.health)  #  show health when finish path
 
@@ -128,6 +132,10 @@ class Enemy(pygame.sprite.Sprite):
         # for a slow but unlimited strengthen on lv5 enemies
         self.health *= 1.06 ** strengthen_value
         self.knockback_minimum /= 1.06 ** strengthen_value
+
+    def spawn_sound(self):
+        play_sound("enemy_antSOUND")
+
 
 
 class Snake(Enemy):
@@ -162,18 +170,15 @@ class Snake(Enemy):
         global enemy_health_font
         enemy_health_font = pygame.font.SysFont(config.Initialise["enemy_health_font"][0], round(config.Initialise["enemy_health_font"][1] * resize_factor), config.Initialise["enemy_health_font"][2], config.Initialise["enemy_health_font"][3])
 
+    def spawn_sound(self):
+        play_sound("enemy_snakeSOUND")
+
 
 class Ant_g(Enemy):
     # greater than
     def __init__(self, level, spawn_time):
         Enemy.__init__(self, "ant_g", level, spawn_time)
         self.randint: int = random.randint(-100,100)
-
-        ## means dont in resize function
-        # get the width needed to center this message, allow functions in this class to accesss the width 
-        ##health_message_align = enemy_health_font.render(str(self.randint), True, (255, 255, 0))
-        # +13 in consideration of the length of the "<" symbol
-        ##self.message_width_half: float = health_message_align.get_rect()[2] + 13
 
     # show a health and the number that it needs to be greater than
     def show_health(self, health: int, location: Vector2):
@@ -218,13 +223,6 @@ class Ant_s(Enemy):
         Enemy.__init__(self, "ant_s", level, spawn_time)
         self.randint: int = random.randint(100,200)
         self.appearent_health: int = self.randint - self.health 
-
-        ## means that they are defined in the resize function
-        # get the width needed to center this message, allow functions in this class to accesss the width 
-        health_message_align: str = f"{self.randint} "
-        ##health_message_align = enemy_health_font.render(health_message_align, True, (255, 255, 0))
-        # +13 in consideration of the length of the ">" symbol
-        ##self.message_width_half: float = health_message_align.get_rect()[2] + 13
 
     # show a health and the number that it needs to be greater than
     def show_health(self, health: int, location: Vector2):

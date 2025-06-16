@@ -97,12 +97,24 @@ class Tower(pygame.sprite.Sprite):
         self.y = self.location[1]
         if (self.x - self.rect[2] / 2) <= mouse_pos[0] <= (self.x + self.rect[2] / 2) and (self.y - self.rect[3] / 2) <= mouse_pos[1] <= (self.y + self.rect[3] / 2):
             # clicked on this tower
+            config.play_sound("pauseSOUND")
+
             
             if self.range:
                 pygame.draw.circle(screen, (255, 255, 255), self.location, self.range, width=1)
+
+                # resume message
+                message = player_font.render("click again to resume." , True, (255, 255, 255))
+                message_rect = message.get_rect()
+                message_rect.center = (ingame_level_data.Ingame_data["resize_factor"] * config.Initialise["screen_size"][0] / 2, ingame_level_data.Ingame_data["resize_factor"] * config.Initialise["screen_size"][1] / 2)
+                pygame.draw.rect(screen, (0,0,0), message_rect)
+                screen.blit(message, message_rect)
+
                 pygame.display.update()
                 # clicked on this tower
                 paused = True
+
+
                 pause_begin_time = pygame.time.get_ticks() / 1000
                 
                 pygame.time.wait(500)
@@ -120,6 +132,7 @@ class Tower(pygame.sprite.Sprite):
                             paused = False
                              # find paused time for finding the actual ingame_level_data.Ingame_data["running"] time of the level
                             ingame_level_data.Ingame_data["time_paused"] += pygame.time.get_ticks() / 1000 - pause_begin_time
+                            config.play_sound("unpauseSOUND")
                             break
             return True
         else: return False
@@ -179,7 +192,7 @@ class Parabola(Tower):
         # self.location is the center of towers 
         self.x = self.location[0]
         self.y = self.location[1]
-        if (self.x - self.rect[2] / 2) <= mouse_pos[0] <= (self.x + self.rect[2] / 2) and (self.y - self.rect[3] / 2) <= mouse_pos[1] <= (self.y + self.rect[3] / 2):
+        if (self.x - self.rect[2] / 2) <= mouse_pos[0] <= (self.x + self.rect[2] / 2) and (self.y - self.rect[3] / 2) <= mouse_pos[1] <= (self.y + self.rect[3] / 2): # clicked on this tower
             pygame.draw.rect(screen, (0, 0, 0), [i * ingame_level_data.Ingame_data["resize_factor"] for i in [735, 50, 205, 540]])
             # instructions
             click_message1 = player_font.render("Click on the direction ", True, (255, 255, 255))
@@ -188,9 +201,18 @@ class Parabola(Tower):
             screen.blit(click_message2, [i * ingame_level_data.Ingame_data["resize_factor"] for i in [735, 75]])
             pygame.draw.circle(screen, (255, 255, 255), self.location, self.range, width=1)
 
+            # resume message
+            message = player_font.render("click again to resume." , True, (255, 255, 255))
+            message_rect = message.get_rect()
+            message_rect.center = (ingame_level_data.Ingame_data["resize_factor"] * config.Initialise["screen_size"][0] / 2, ingame_level_data.Ingame_data["resize_factor"] * config.Initialise["screen_size"][1] / 2)
+            pygame.draw.rect(screen, (0,0,0), message_rect)
+            screen.blit(message, message_rect)
+
             pygame.display.update()
             
-            # clicked on this tower
+            # sound
+            config.play_sound("pauseSOUND")
+
             paused = True
             pause_begin_time = pygame.time.get_ticks() / 1000
 
@@ -210,6 +232,8 @@ class Parabola(Tower):
                         mouse = pygame.mouse.get_pos()
                         paused = False
                         ingame_level_data.Ingame_data["time_paused"] += pygame.time.get_ticks() / 1000 - pause_begin_time
+                        config.play_sound("unpauseSOUND")
+
                         break
                     
             self.rotate(mouse)

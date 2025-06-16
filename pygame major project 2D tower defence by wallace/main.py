@@ -81,18 +81,6 @@ def generate_music(level : str):
     pygame.mixer.music.set_volume(0.5)
     pygame.mixer.music.play(-1, 0, 2000)
 
-def play_sound(sound: str):
-    """
-    playe sound effect
-
-    Args:
-        sound: A string corresponding to the key in the dictionary config.Initialise
-
-    Result:
-        sound effect being played, not pausing previous music
-    """
-    pygame.mixer.Sound.play(config.Initialise[sound])
-
 def play_sound_pause_music(sound: str):
     """
     playe sound effect and pause music
@@ -104,7 +92,7 @@ def play_sound_pause_music(sound: str):
         sound effect being played, pause previous music
     """
     pygame.mixer.music.pause()
-    play_sound(sound)
+    config.play_sound(sound)
 
 def pass_level(level: str):
     """
@@ -385,7 +373,7 @@ def place_tower(tower_type, level, location: Vector2):
     original_location = revert_resizing_cords(location)
     # place tower base at where clicked
     original_location = [original_location[0], original_location[1] - 35]
-
+    config.play_sound("tower_buildSOUND")
     if path_point_distance_check(location, 60):
         match tower_type:
             case "Linear":
@@ -413,6 +401,7 @@ def spawn_enemies(time_called: float):
         A enemy object from the Tower class is moved from the Enemy_prep_list to the Enemy_list
     """
     while 0 < len(ingame_level_data.Ingame_data["Enemy_prep_list"]) and ingame_level_data.Ingame_data["Enemy_prep_list"][0].spawn_time <= time_called:
+        ingame_level_data.Ingame_data["Enemy_prep_list"][0].spawn_sound()
         ingame_level_data.Ingame_data["Enemy_prep_list"][0].resize(ingame_level_data.Ingame_data["resize_factor"])
         ingame_level_data.Ingame_data["Enemy_list"].add(ingame_level_data.Ingame_data["Enemy_prep_list"][0])
         ingame_level_data.Ingame_data["Enemy_prep_list"].pop(0)
@@ -431,7 +420,7 @@ def dialogue_show(time_called: float):
     #print(f"{time_called - ingame_level_data.Ingame_data["Dialogue_list"][2].time()} = {time_called} -  {ingame_level_data.Ingame_data["Dialogue_list"][2].time()}")
     if  time_called >= ingame_level_data.Ingame_data["Dialogue_list"][2].time(): # time for the dialogue to be shown
         ingame_level_data.Ingame_data["Dialogue_list"][2].draw()
-        play_sound("pauseSOUND")
+        config.play_sound("pauseSOUND")
         pygame.display.update()
         
         pygame.time.wait(500)
@@ -453,7 +442,7 @@ def dialogue_show(time_called: float):
                     # unpause
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         paused = False
-                        play_sound("unpauseSOUND")
+                        config.play_sound("unpauseSOUND")
                         ingame_level_data.Ingame_data["Dialogue_list"].pop(2)
 
                         # total paused time in the time in the level for finding the actual ingame_level_data.Ingame_data["running"] time of the level
@@ -515,7 +504,7 @@ def pause_level():
     paused = True
     message = player_font.render("click again to resume." , True, (255, 255, 255))
     message_rect = message.get_rect()
-    message_rect.center = (config.Initialise["screen_size"][0] / 2, config.Initialise["screen_size"][1] / 2)
+    message_rect.center = (ingame_level_data.Ingame_data["resize_factor"] * config.Initialise["screen_size"][0] / 2, ingame_level_data.Ingame_data["resize_factor"] * config.Initialise["screen_size"][1] / 2)
     pygame.draw.rect(screen, (0,0,0), message_rect)
     screen.blit(message, message_rect)
     play_sound_pause_music("pauseSOUND")
