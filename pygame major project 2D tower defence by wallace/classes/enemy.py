@@ -3,7 +3,6 @@ import config
 from pygame.math import Vector2
 import ingame_level_data
 import random
-import copy
 from config import play_sound
 
 # get global data from config
@@ -33,7 +32,7 @@ class Enemy(pygame.sprite.Sprite):
         self.distance_per_frame = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["distance_per_second"] / fps
         self.health = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["health"]
         self.checkpoints = list(config.Level_preset[self.level]["checkpoints"])
-        self.image = copy.deepcopy(config.Level_preset[self.level]["enemy_data"][self.enemy_type]["image"])
+        self.image = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["image"]
         self.original_image = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["image"]
         self.bounty = config.Level_preset[self.level]["enemy_data"][self.enemy_type]["bounty"]
 
