@@ -646,7 +646,7 @@ while ingame_level_data.Ingame_data["running"]:
             # start loop for level
             while ingame_level_data.Ingame_data["level_selected"] == "endless":
                 # insert background image
-                screen.fill((153, 0, 51))
+                screen.fill((0, 30, 0))
                 screen.blit(background, (0, 0))
 
                 # display player health

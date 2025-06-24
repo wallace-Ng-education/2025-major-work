@@ -9,23 +9,23 @@ Initialise = {
     # screen, icon and title
     "screen_size" : (940, 540),
     "screen" : pygame.display.set_mode((940,540), pygame.RESIZABLE),
-    "icon" : 'pygame major project 2D tower defence by wallace/assets/game-icon.png',
+    "icon" : 'assets/game-icon.png',
     "title" : "Maths defence",
 
     # convert to make it load more quickly, alpha allows image transparency
-    "enemy_snakeIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/enemy_snakeIMG.png').convert_alpha(), 1.3),
-    "enemy_ant_gIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/enemy_ant_gIMG.png').convert_alpha(), 1.3),
-    "enemy_ant_sIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/enemy_ant_sIMG.png').convert_alpha(), 1.3),
+    "enemy_snakeIMG" : pygame.transform.scale_by(pygame.image.load('assets/enemy_snakeIMG.png').convert_alpha(), 1.3),
+    "enemy_ant_gIMG" : pygame.transform.scale_by(pygame.image.load('assets/enemy_ant_gIMG.png').convert_alpha(), 1.3),
+    "enemy_ant_sIMG" : pygame.transform.scale_by(pygame.image.load('assets/enemy_ant_sIMG.png').convert_alpha(), 1.3),
 
-    "attack_linearIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/attack_linearIMG.png').convert_alpha(), 0.7),
-    "attack_parabolaIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/attack_parabolaIMG.png').convert_alpha(), 1),
-    "tower_linearIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/tower_linearIMG.png').convert_alpha(), 0.8),
-    "tower_parabolaIMG" : pygame.transform.scale_by(pygame.image.load('pygame major project 2D tower defence by wallace/assets/tower_parabolaIMG.png').convert_alpha(), 0.8),
-    "queryIMG" : pygame.image.load('pygame major project 2D tower defence by wallace/assets/query.png').convert_alpha(),
-    "button_pauseIMG": pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_pauseIMG.png').convert_alpha(),
-    "button_homeIMG": pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_homeIMG.png').convert_alpha(),
-    "Dialogue_badend": pygame.image.load('pygame major project 2D tower defence by wallace/assets/Dialogue_badend.png').convert_alpha(),
-    "Dialogue_happyend": pygame.image.load('pygame major project 2D tower defence by wallace/assets/Dialogue_happyend.png').convert_alpha(),
+    "attack_linearIMG" : pygame.transform.scale_by(pygame.image.load('assets/attack_linearIMG.png').convert_alpha(), 0.7),
+    "attack_parabolaIMG" : pygame.transform.scale_by(pygame.image.load('assets/attack_parabolaIMG.png').convert_alpha(), 1),
+    "tower_linearIMG" : pygame.transform.scale_by(pygame.image.load('assets/tower_linearIMG.png').convert_alpha(), 0.8),
+    "tower_parabolaIMG" : pygame.transform.scale_by(pygame.image.load('assets/tower_parabolaIMG.png').convert_alpha(), 0.8),
+    "queryIMG" : pygame.image.load('assets/query.png').convert_alpha(),
+    "button_pauseIMG": pygame.image.load('assets/button_pauseIMG.png').convert_alpha(),
+    "button_homeIMG": pygame.image.load('assets/button_homeIMG.png').convert_alpha(),
+    "Dialogue_badend": pygame.image.load('assets/Dialogue_badend.png').convert_alpha(),
+    "Dialogue_happyend": pygame.image.load('assets/Dialogue_happyend.png').convert_alpha(),
 
     # text font initialise
     # consider importing settings to a list that fit into pygame.font.SysFont() -> usually [text family: str, size: int, blod: bool, i]
@@ -33,17 +33,17 @@ Initialise = {
     "player_font" : ["cambria", 20, True, False],
 
     # audio initialise
-    "badendSOUND": pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/badendSOUND.mp3"),
-    "button_pressedSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/button_pressedSOUND.mp3"),
-    "currency_getSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/currency_getSOUND.mp3"),
-    "enemy_antSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/enemy_antSOUND.mp3"),
-    "enemy_snakeSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/enemy_snakeSOUND.mp3"),
-    "happyendSOUND": pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/happyendSOUND.mp3"),
-    "homeSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/homeSOUND.mp3"),
-    "pauseSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/pauseSOUND.mp3"),
-    "player_hurtSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/player_hurtSOUND.mp3"),
-    "tower_buildSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/tower_buildSOUND.mp3"),
-    "unpauseSOUND":  pygame.mixer.Sound("pygame major project 2D tower defence by wallace/audio/unpauseSOUND.mp3"),
+    "badendSOUND": pygame.mixer.Sound("audio/badendSOUND.mp3"),
+    "button_pressedSOUND":  pygame.mixer.Sound("audio/button_pressedSOUND.mp3"),
+    "currency_getSOUND":  pygame.mixer.Sound("audio/currency_getSOUND.mp3"),
+    "enemy_antSOUND":  pygame.mixer.Sound("audio/enemy_antSOUND.mp3"),
+    "enemy_snakeSOUND":  pygame.mixer.Sound("audio/enemy_snakeSOUND.mp3"),
+    "happyendSOUND": pygame.mixer.Sound("audio/happyendSOUND.mp3"),
+    "homeSOUND":  pygame.mixer.Sound("audio/homeSOUND.mp3"),
+    "pauseSOUND":  pygame.mixer.Sound("audio/pauseSOUND.mp3"),
+    "player_hurtSOUND":  pygame.mixer.Sound("audio/player_hurtSOUND.mp3"),
+    "tower_buildSOUND":  pygame.mixer.Sound("audio/tower_buildSOUND.mp3"),
+    "unpauseSOUND":  pygame.mixer.Sound("audio/unpauseSOUND.mp3"),
 
     # frames per second
     "fps" : 30
@@ -55,14 +55,14 @@ Level_preset = {
               # k represents the column number, m the row number
         # button to: tutorial, level1, level2,/n level3, level4, level5
         "button_data" : [
-            [pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_tutorialIMG.png').convert_alpha(), [85, 70]],
-            [pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_lv1IMG.png').convert_alpha(), [375, 70]],
-            [pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_lv2IMG.png').convert_alpha(), [655, 70]],
-            [pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_lv3IMG.png').convert_alpha(), [85, 305]],
-            [pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_lv4IMG.png').convert_alpha(), [375, 305]],
-            [pygame.image.load('pygame major project 2D tower defence by wallace/assets/button_lv5IMG.png').convert_alpha(), [655, 305]],
+            [pygame.image.load('assets/button_tutorialIMG.png').convert_alpha(), [85, 70]],
+            [pygame.image.load('assets/button_lv1IMG.png').convert_alpha(), [375, 70]],
+            [pygame.image.load('assets/button_lv2IMG.png').convert_alpha(), [655, 70]],
+            [pygame.image.load('assets/button_lv3IMG.png').convert_alpha(), [85, 305]],
+            [pygame.image.load('assets/button_lv4IMG.png').convert_alpha(), [375, 305]],
+            [pygame.image.load('assets/button_lv5IMG.png').convert_alpha(), [655, 305]],
         ],
-        "music": "pygame major project 2D tower defence by wallace/audio/HomeMUSIC.mp3",
+        "music": "audio/HomeMUSIC.mp3",
     },
 
     # tutorial
@@ -86,15 +86,15 @@ Level_preset = {
         # badend, happyend, other dialogues with a time 
         "dialogue_data": [[Initialise["Dialogue_badend"],[90,55]],
                           [Initialise["Dialogue_happyend"],[90,55]], 
-                          [pygame.image.load('pygame major project 2D tower defence by wallace/assets/Dialogue_tutorial_story.png').convert_alpha(),[90,55], 1],
-                          [pygame.image.load('pygame major project 2D tower defence by wallace/assets/Dialogue_tutorial_enemy_snake.png').convert_alpha(),[-30,55], 1.7], 
-                          [pygame.image.load('pygame major project 2D tower defence by wallace/assets/Dialogue_tutorial_tower.png').convert_alpha(),[0,90], 1.71]],
+                          [pygame.image.load('assets/Dialogue_tutorial_story.png').convert_alpha(),[90,55], 1],
+                          [pygame.image.load('assets/Dialogue_tutorial_enemy_snake.png').convert_alpha(),[-30,55], 1.7], 
+                          [pygame.image.load('assets/Dialogue_tutorial_tower.png').convert_alpha(),[0,90], 1.71]],
         # UI, battlefield
         "rect_data":[[735, 0 , 200, 540],[0, 0 , 735, 540]],
         "shop_data": [["Linear tower", True]],
         "enemy_count": 20,
-        "background": pygame.image.load('pygame major project 2D tower defence by wallace/assets/TutorialIMG.png'),
-        "music": "pygame major project 2D tower defence by wallace/audio/TutorialMUSIC.mp3"
+        "background": pygame.image.load('assets/TutorialIMG.png'),
+        "music": "audio/TutorialMUSIC.mp3"
         },
 
     # 1
@@ -134,8 +134,8 @@ Level_preset = {
         # for every shop item [tower_image, name: str, description: str, price: int, unlocked:bool, price:int]
         "shop_data": [["Linear tower", True]],
         "enemy_count": 30,
-        "background": pygame.image.load('pygame major project 2D tower defence by wallace/assets/Lv1IMG.png'),
-        "music": "pygame major project 2D tower defence by wallace/audio/Lv1MUSIC.mp3"
+        "background": pygame.image.load('assets/Lv1IMG.png'),
+        "music": "audio/Lv1MUSIC.mp3"
         },
 
     # 2
@@ -172,8 +172,8 @@ Level_preset = {
         # for every shop item [tower_image, name: str, description: str, price: int, unlocked:bool, price:int]
         "shop_data": [["Linear tower", True]],
         "enemy_count": 40,
-        "background": pygame.image.load('pygame major project 2D tower defence by wallace/assets/Lv2IMG.png'),
-        "music": "pygame major project 2D tower defence by wallace/audio/Lv2MUSIC.mp3",
+        "background": pygame.image.load('assets/Lv2IMG.png'),
+        "music": "audio/Lv2MUSIC.mp3",
         },
 
     # 3
@@ -209,8 +209,8 @@ Level_preset = {
         # for every shop item [tower_image, name: str, description: str, price: int, unlocked:bool, price:int]
         "shop_data": [["Linear tower", True], ["Parabola tower", True]],
         "enemy_count": 40,
-        "background": pygame.image.load('pygame major project 2D tower defence by wallace/assets/Lv3IMG.png'),
-        "music": "pygame major project 2D tower defence by wallace/audio/Lv3MUSIC.mp3",
+        "background": pygame.image.load('assets/Lv3IMG.png'),
+        "music": "audio/Lv3MUSIC.mp3",
         },
 
     # 4
@@ -254,8 +254,8 @@ Level_preset = {
         # for every shop item [tower_image, name: str, description: str, price: int, unlocked:bool, price:int]
         "shop_data": [["Linear tower", True], ["Parabola tower", True]],
         "enemy_count": 60,
-        "background": pygame.image.load('pygame major project 2D tower defence by wallace/assets/Lv4IMG.png'),
-        "music": "pygame major project 2D tower defence by wallace/audio/Lv4MUSIC.mp3",
+        "background": pygame.image.load('assets/Lv4IMG.png'),
+        "music": "audio/Lv4MUSIC.mp3",
         },
 
     # endless
@@ -299,8 +299,8 @@ Level_preset = {
         # for every shop item [tower_image, name: str, description: str, price: int, unlocked:bool, price:int]
         "shop_data": [["Linear tower", True], ["Parabola tower", True]],
         "enemy_count": "endless",
-        "background": pygame.image.load('pygame major project 2D tower defence by wallace/assets/Lv5IMG.png'),
-        "music": "pygame major project 2D tower defence by wallace/audio/Lv5MUSIC.mp3",
+        "background": pygame.image.load('assets/Lv5IMG.png'),
+        "music": "audio/Lv5MUSIC.mp3",
         },
 }
 
