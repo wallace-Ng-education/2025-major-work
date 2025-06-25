@@ -1,8 +1,25 @@
 # 2025-major-work
 wallace's lovely major work
+More info on [https://sites.google.com/education.nsw.gov.au/
+wallaceng2025semwwebsite](url)
 # Maths Defence
 
 A 2D tower defence game written in [Pygame](https://www.pygame.org/) for a school major work.  You defend your base by placing towers that defeat incoming enemies.  Each level introduces different enemy waves and background music.
+
+## Requirements
+
+- System storage of minimum 43.4MB
+
+## Installation
+
+1. Download that respository as a zip file.
+2. Extract the zip file
+3. Run / Double-tap main .exe , which locates in 2025-major-work-main\pygame major project 2D tower defence by wallace\main .exe" of the unzipped file.
+4. Optional: create a shortcut for main .exe on desktop for efficient access.
+
+## How to play - basics
+
+Use your mouse to navigate the menus and place towers.  The pause and home buttons are accessible during gameplay.  Progress through the tutorial and five levels to win the game.
 
 ## Repository layout
 
@@ -18,20 +35,6 @@ pygame major project 2D tower defence by wallace/
 ```
 
 The `config.py` file defines `Initialise`, `Level_preset` and `Tower_preset` dictionaries which hold most of the game data such as images, sound paths, tower statistics and level configuration.
-
-## Requirements
-
-- Python 3.9 or newer
-- `pygame` 2.x
-
-## Installation
-
-1. Download this repository.
-2. run main .exe
-3. (optional) right click main .exe and create a shortcut for it on desktop
-
-
-Use your mouse to navigate the menus and place towers.  The pause and home buttons are accessible during gameplay.  Progress through the tutorial and five levels to win the game.
 
 ## Notes
 
