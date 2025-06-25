@@ -26,21 +26,10 @@ The `config.py` file defines `Initialise`, `Level_preset` and `Tower_preset` dic
 
 ## Installation
 
-1. Clone this repository.
-2. (Optional) Create and activate a virtual environment.
-3. Install dependencies:
+1. Download this repository.
+2. run main .exe
+3. (optional) right click main .exe and create a shortcut for it on desktop
 
-   ```bash
-   pip install pygame
-   ```
-
-## ingame_level_data.Ingame_data["running"] the game
-
-Execute `main.py` from the project directory:
-
-```bash
-python3 "pygame major project 2D tower defence by wallace/main.py"
-```
 
 Use your mouse to navigate the menus and place towers.  The pause and home buttons are accessible during gameplay.  Progress through the tutorial and five levels to win the game.
 
