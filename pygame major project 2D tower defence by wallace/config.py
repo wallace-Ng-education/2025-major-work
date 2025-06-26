@@ -203,7 +203,9 @@ Level_preset = {
         # pause, home
         "button_data": [[Initialise["button_pauseIMG"],[840,0]],[Initialise["button_homeIMG"],[890,0]]],
         # badend, happyend
-        "dialogue_data": [[Initialise["Dialogue_badend"],[90,55]],[Initialise["Dialogue_happyend"],[90,55]]],
+        "dialogue_data": [[Initialise["Dialogue_badend"],[90,55]],
+                            [Initialise["Dialogue_happyend"],[90,55]],
+                            [pygame.image.load('assets/Dialogue_lv3_parabola.png').convert_alpha(),[40,105], 0],],
         # UI, battlefield
         "rect_data":[[735, 0 , 200, 540],[0, 0 , 735, 540]],
         # for every shop item [tower_image, name: str, description: str, price: int, unlocked:bool, price:int]
@@ -293,7 +295,10 @@ Level_preset = {
         # pause, home
         "button_data": [[Initialise["button_pauseIMG"],[840,0]],[Initialise["button_homeIMG"],[890,0]]],
         # badend, happyend
-        "dialogue_data": [[Initialise["Dialogue_badend"],[90,55]],[Initialise["Dialogue_happyend"],[90,55]]],
+        "dialogue_data": [[Initialise["Dialogue_badend"],[90,55]],
+                          [Initialise["Dialogue_happyend"],[90,55]],
+                          [pygame.image.load('assets/Dialogue_lv5.png').convert_alpha(),[90,55], 0],
+                        ],
         # UI, battlefield
         "rect_data":[[735, 0 , 200, 540],[0, 0 , 735, 540]],
         # for every shop item [tower_image, name: str, description: str, price: int, unlocked:bool, price:int]

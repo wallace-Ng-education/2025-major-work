@@ -29,11 +29,11 @@ exe = EXE(
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=False,
+    console=True,
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['C:\\Users\\wallace\\Documents\\GitHub\\2025-major-work\\pygame major project 2D tower defence by wallace\\assets\\game-icon.ico'],
+    icon=['assets\\game-icon.ico'],
 )

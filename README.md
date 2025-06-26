@@ -15,8 +15,8 @@ A 2D tower defence game written in [Pygame](https://www.pygame.org/) for a schoo
 
 1. Download that respository as a zip file.
 2. Extract the zip file
-3. Run / Double-tap main .exe , which locates in 2025-major-work-main\pygame major project 2D tower defence by wallace\main .exe" of the unzipped file.
-4. Optional: create a shortcut for main .exe on desktop for efficient access.
+3. Run / Double-tap main.exe , which locates in 2025-major-work-main\pygame major project 2D tower defence by wallace\main.exe" of the unzipped file.
+4. Optional: create a shortcut for main.exe on desktop for efficient access.
 5. Optional: Feedback after playing would be really appreciated! https://docs.google.com/forms/d/e/1FAIpQLSdY0cxqxB_DfHvy_72U16Gi22e6Tk_y4nVFeBIMJpfaTCJAiQ/viewform?usp=dialog
 
 ## How to play - basics
