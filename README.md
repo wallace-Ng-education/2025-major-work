@@ -1,6 +1,8 @@
 # 2025-major-work
-wallace's lovely major work
+wallace's lovely major work.
+
 More info on https://sites.google.com/education.nsw.gov.au/wallaceng2025semwwebsite
+
 # Maths Defence
 
 A 2D tower defence game written in [Pygame](https://www.pygame.org/) for a school major work.  You defend your base by placing towers that defeat incoming enemies.  Each level introduces different enemy waves and background music.
