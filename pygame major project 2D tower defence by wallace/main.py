@@ -201,12 +201,19 @@ def generate_button(level : str):
     except KeyError:
         # in case there is no button for this level
         pass
-
+ 
     try:  
         for i in range(0, len(config.Level_preset[level]["dialogue_data"])):
             a = Dialogue(i, level)
-            ingame_level_data.Ingame_data["Dialogue_list"].append(a)
-            
+            a_time = a.time()
+            # one of the fail / pass level dialogues
+            if not a_time:
+                ingame_level_data.Ingame_data["Dialogue_list"].append(a)
+
+            # they still have to be displayed
+            elif a_time > pygame.time.get_ticks() / 1000  -  ingame_level_data.Ingame_data["time_level_init"] - ingame_level_data.Ingame_data["time_paused"]:
+                ingame_level_data.Ingame_data["Dialogue_list"].append(a)
+
     except KeyError:
         pass
 
@@ -419,6 +426,7 @@ def dialogue_show(time_called: float):
     #print(time_called)
     #print(f"{time_called - ingame_level_data.Ingame_data["Dialogue_list"][2].time()} = {time_called} -  {ingame_level_data.Ingame_data["Dialogue_list"][2].time()}")
     if  time_called >= ingame_level_data.Ingame_data["Dialogue_list"][2].time(): # time for the dialogue to be shown
+
         ingame_level_data.Ingame_data["Dialogue_list"][2].draw()
         config.play_sound("pauseSOUND")
         pygame.display.update()
@@ -545,16 +553,17 @@ def initialise(level):
     """
     ingame_level_data.Ingame_data["current_player_health"] = config.Level_preset[level]["player_health"]
     ingame_level_data.Ingame_data["current_player_currency"] = config.Level_preset[level]["player_currency"]
+
+    # The enemies spawn relative to when the
+    ingame_level_data.Ingame_data["time_paused"] = 0
+    ingame_level_data.Ingame_data["time_level_init"] = pygame.time.get_ticks()/1000
+
     generate_enemies(level)
     generate_button(level)
     generate_music(level)
 
     global background
     background = pygame.transform.scale_by(config.Level_preset[level]["background"], ingame_level_data.Ingame_data["resize_factor"])
-
-    # The enemies spawn relative to when the
-    ingame_level_data.Ingame_data["time_level_init"] = pygame.time.get_ticks()/1000
-    ingame_level_data.Ingame_data["time_paused"] = 0
 
     ingame_level_data.Ingame_data["held_item"] = None
 
@@ -565,6 +574,19 @@ def initialise(level):
 
     ingame_level_data.Ingame_data["tower_placed"] = 0
 
+def display_held_item():
+    if ingame_level_data.Ingame_data["held_item"] == 1: # linear tower
+        # blits the tower on the mouse
+        pos = tuple(map(lambda i, j: i + j*ingame_level_data.Ingame_data["resize_factor"], pygame.mouse.get_pos(), (-40, -120)))
+        screen.blit(pygame.transform.scale_by(config.Initialise["tower_linearIMG"], ingame_level_data.Ingame_data["resize_factor"]), pos)
+
+    elif ingame_level_data.Ingame_data["held_item"] == 2: # parabola tower
+        # blits the tower on the mouse
+        pos = tuple(map(lambda i, j: i + j*ingame_level_data.Ingame_data["resize_factor"], pygame.mouse.get_pos(), (-40, -120)))
+        screen.blit(pygame.transform.scale_by(config.Initialise["tower_parabolaIMG"], ingame_level_data.Ingame_data["resize_factor"]), pos)
+
+    else:
+        pass
 
 # Game loop
 ingame_level_data.Ingame_data["running"] = True
@@ -651,8 +673,10 @@ while ingame_level_data.Ingame_data["running"]:
 
                 # display player health
                 display_player_data_endless()
-                
+
                 error_message()
+                display_held_item()
+                
                 ingame_level_data.Ingame_data["Tower_list"].draw(screen)
                 for tower in ingame_level_data.Ingame_data["Tower_list"]:
                     tower.aim()
@@ -803,6 +827,7 @@ while ingame_level_data.Ingame_data["running"]:
 
                 # move enemies from prep list to list at certain time
                 spawn_enemies(current_time)
+
                 # check if any dialogue other than the pass level and fail level
                 if len(ingame_level_data.Ingame_data["Dialogue_list"]) >= 3:
                     dialogue_show(current_time)

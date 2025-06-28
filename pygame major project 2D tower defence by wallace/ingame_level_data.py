@@ -37,7 +37,7 @@ Ingame_data = {
         "checkpoints": [],
         "enemy_count": 0,
         
-        "time_level_init": None,
+        "time_level_init": 0,
         "time_paused": 0,
 
         "running": False,

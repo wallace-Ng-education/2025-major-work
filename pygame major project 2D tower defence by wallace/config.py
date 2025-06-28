@@ -289,7 +289,7 @@ Level_preset = {
             }
         },
         # (0,0) is not a valid checkpoint
-        "checkpoints": [(0, 1), (171, 144), (70, 309), (167, 392), (304, 233), (416, 364), (538, 250)],
+        "checkpoints": [(0, 1), (171, 144), (70, 309), (167, 392), (290, 223), (416, 364), (538, 250)],
         "player_health": 100,
         "player_currency": 150,
         # pause, home
@@ -297,7 +297,7 @@ Level_preset = {
         # badend, happyend
         "dialogue_data": [[Initialise["Dialogue_badend"],[90,55]],
                           [Initialise["Dialogue_happyend"],[90,55]],
-                          [pygame.image.load('assets/Dialogue_lv5.png').convert_alpha(),[90,55], 0],
+                          [pygame.image.load('assets/Dialogue_lv5.png').convert_alpha(),[90,55], 1],
                         ],
         # UI, battlefield
         "rect_data":[[735, 0 , 200, 540],[0, 0 , 735, 540]],
