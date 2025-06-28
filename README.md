@@ -7,17 +7,36 @@ More info on https://sites.google.com/education.nsw.gov.au/wallaceng2025semwwebs
 
 A 2D tower defence game written in [Pygame](https://www.pygame.org/) for a school major work.  You defend your base by placing towers that defeat incoming enemies.  Each level introduces different enemy waves and background music.
 
-## Requirements
+
+## Requirements- Windows
 
 - System storage of minimum 43.4MB
-
-## Installation
+- 64-bit Windows operating system
+- 
+## Installation - Windows
 
 1. Download that respository as a zip file.
 2. Extract the zip file
-3. Run / Double-tap main.exe , which locates in 2025-major-work-main\pygame major project 2D tower defence by wallace\main.exe" of the unzipped file.
+3. Run / Double-tap main.exe , which locates at 2025-major-work-main\pygame major project 2D tower defence by wallace\main.exe" of the unzipped file.
 4. Optional: create a shortcut for main.exe on desktop for efficient access.
 5. Optional: Feedback after playing would be really appreciated! https://docs.google.com/forms/d/e/1FAIpQLSdY0cxqxB_DfHvy_72U16Gi22e6Tk_y4nVFeBIMJpfaTCJAiQ/viewform?usp=dialog
+
+## Requirements- Mac
+
+- System storage of minimum 43.4MB
+- macOS - Ventura or above
+- Python - v 3.1 or above
+
+
+## Installation - Mac
+
+1. Download that respository as a zip file.
+2. Extract the zip file
+3. Download pip (type "python3 get-pip.py" in terminal)
+4. Download pygame (type "pip3 install pygame" in terminal)
+5. Run main.py , which locates at 2025-major-work-main\pygame major project 2D tower defence by wallace\main.py" of the unzipped file. (locate the file location and then type "python3 main.py" in terminal)
+6. Optional: Feedback after playing would be really appreciated! https://docs.google.com/forms/d/e/1FAIpQLSdY0cxqxB_DfHvy_72U16Gi22e6Tk_y4nVFeBIMJpfaTCJAiQ/viewform?usp=dialog
+
 
 ## How to play - basics
 
