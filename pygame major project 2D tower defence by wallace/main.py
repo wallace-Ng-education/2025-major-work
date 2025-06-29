@@ -853,6 +853,8 @@ while ingame_level_data.Ingame_data["running"]:
                 display_player_data()
                 
                 error_message()
+                display_held_item()
+
                 ingame_level_data.Ingame_data["Tower_list"].draw(screen)
                 for tower in ingame_level_data.Ingame_data["Tower_list"]:
                     tower.aim()
