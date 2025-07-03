@@ -1,3 +1,10 @@
+"""
+Run program with python:
+    1.Go to the directory 2025-major-work\pygame major project 2D tower defence by wallace in command prompt
+    2.type python3 main.py
+    eg. ..2025-major-work\pygame major project 2D tower defence by wallace>python3 main.py
+"""
+
 # initialising
 import pygame
 import classes.enemy
@@ -454,7 +461,7 @@ def dialogue_show(time_called: float):
                         ingame_level_data.Ingame_data["Dialogue_list"].pop(2)
 
                         # total paused time in the time in the level for finding the actual ingame_level_data.Ingame_data["running"] time of the level
-                        ingame_level_data.Ingame_data["time_paused"] += pygame.time.get_ticks() / 1000 - time_called - ingame_level_data.Ingame_data["time_level_init"] - ingame_level_data.Ingame_data["time_paused"]
+                        ingame_level_data.Ingame_data["time_paused"] = pygame.time.get_ticks() / 1000 - time_called - ingame_level_data.Ingame_data["time_level_init"]# - ingame_level_data.Ingame_data["time_paused"]
                         #print(ingame_level_data.Ingame_data["time_paused"])
                         break
 
@@ -479,6 +486,7 @@ def resize_factor_get():
         ingame_level_data.Ingame_data["resize_factor"] = width_factor
     else:
         ingame_level_data.Ingame_data["resize_factor"] = height_factor
+
 
 def error_message():
     """
@@ -591,7 +599,7 @@ def display_held_item():
 # Game loop
 ingame_level_data.Ingame_data["running"] = True
 
-# where level -1 is the homepage and level 0 will be tutorial, level 1 will be level 1
+# where "home" is the homepage and "tutorial" will be tutorial, "level1" will be level 1, "endless" will be level 5 i.e. endless
 ingame_level_data.Ingame_data["level_selected"] = "home"
 
 # stores in format of a list containing duration in seconds and text
@@ -726,6 +734,8 @@ while ingame_level_data.Ingame_data["running"]:
 
                 # check if have health
                 fail_level()
+
+
                 
                 # function to exit the game while player pressed X on game window
                 for event in pygame.event.get():
@@ -736,7 +746,6 @@ while ingame_level_data.Ingame_data["running"]:
 
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         mouse = pygame.mouse.get_pos()
-                        #print(str(mouse) + ', ') # for testing
                         # pressed on UI
                         if ingame_level_data.Ingame_data["Rect_list"][0].check_press(mouse):
 
